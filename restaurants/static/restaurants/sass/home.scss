@@ -1,0 +1,386 @@
+@import "variables";
+@import "mixin";
+.herohead {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 45;
+  @include md {
+    background: $black;
+  }
+  .inhead {
+    padding: 20px 0;
+  }
+  .headlineb {
+    border-bottom: 2px solid #383838;
+    width: 100%;
+  }
+}
+.hlogo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  z-index: 3;
+  @include md {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: translateY(0%) translateX(0%);
+  }
+}
+.hicon {
+  background: $white;
+  border: none;
+  @include br(100px);
+  aspect-ratio: 1;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  padding: 0;
+}
+.headnav {
+  gap: 25px;
+  @include md {
+    gap: 0;
+  }
+  a {
+    font-size: 13px;
+    color: #a3a09f;
+    font-size: 400;
+    padding: 10px 0;
+    text-transform: capitalize;
+    border-bottom: 2px solid transparent;
+    &:hover {
+      border-bottom: 2px solid $white;
+      color: $white;
+      font-weight: 600;
+    }
+    &:last-child {
+      margin-left: auto;
+      @include md {
+        margin-left: 0;
+      }
+    }
+  }
+  .active {
+    border-bottom: 2px solid $white;
+    color: $white;
+    font-weight: 600;
+  }
+}
+.hright {
+  .hcart {
+    width: 48px;
+    aspect-ratio: 1;
+    height: 48px;
+    @include br(100px);
+    background: $white;
+    display: grid;
+    place-items: center;
+    @include md {
+      width: 38px;
+      aspect-ratio: 1;
+      height: 38px;
+    }
+  }
+}
+.hlog {
+  font-size: 16px;
+  font-weight: 600;
+  color: $white;
+  padding: 10px 30px;
+  border: 2px solid $white;
+  @include br(100px);
+  @include md {
+    padding: 6px 25px;
+    font-size: 14px;
+  }
+  &:hover {
+    background: $primary;
+    color: $white;
+    border-color: $primary;
+  }
+}
+.homebanner {
+  background: url(../images/ho1.jpg) no-repeat center;
+  background-size: cover;
+  clip-path: polygon(100% 0, 100% 75%, 50% 100%, 0 75%, 0 0);
+  @include sm {
+    clip-path: polygon(100% 0, 100% 90%, 50% 100%, 0 90%, 0 0);
+  }
+  .overlayblock {
+    padding: 200px 0 300px 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 2%,
+      rgba(0, 0, 0, 0.24) 100%
+    );
+  }
+}
+.lochome {
+  border: 1px solid $white;
+  @include br(12px);
+  padding: 10px;
+  color: $white;
+  p {
+    font-weight: 500;
+    font-size: 13px;
+  }
+  i {
+    background: $primary;
+    @include br(100px);
+    aspect-ratio: 1;
+    width: 20px;
+    text-align: center;
+    line-height: 20px;
+  }
+}
+.hometitle {
+  h1 {
+    color: $white;
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 90px;
+    @include md {
+      font-size: 60px;
+      line-height: 68px;
+    }
+    @include sm {
+      font-size: 40px;
+      line-height: 48px;
+    }
+    span {
+      font-weight: 800;
+      background: linear-gradient(
+        to right,
+        rgba(225, 92, 90, 1) 0%,
+        rgba(192, 46, 105, 1) 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+  p {
+    color: $white;
+    font-size: 14px;
+    line-height: 20px;
+  }
+}
+.whitesearch {
+  background: $white;
+  @include br(100px);
+  padding: 8px 8px 8px 30px;
+  @include sm {
+    padding: 8px;
+    @include br(10px);
+  }
+  & > div {
+    position: relative;
+    &:last-child,
+    &:nth-child(3) {
+      @include af {
+        display: none;
+      }
+    }
+    @include af {
+      border-right: 1px solid #b3b3b3;
+      height: 28px;
+      top: 50%;
+      right: -10px;
+      transform: translateY(-50%);
+      @include cw(652px) {
+        display: none;
+      }
+    }
+  }
+  .whtitlebox {
+    h4 {
+      color: $black;
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 20px;
+    }
+    select {
+      font-size: 13px;
+      color: #ababab;
+      background: $white;
+      border: none;
+    }
+  }
+  button[type="submit"] {
+    background: $primary;
+    border: none;
+    width: 68px;
+    aspect-ratio: 1;
+    @include br(100px);
+    img {
+      width: 25px;
+    }
+  }
+}
+.beetitle {
+  h2 {
+    font-size: 64px;
+    font-weight: 700;
+    color: $black;
+    line-height: 68px;
+    @include sm{
+        font-size: 40px;
+        line-height: 48px;
+    }
+  }
+  p {
+    font-size: 14px;
+    line-height: 24px;
+    color: #808080;
+  }
+}
+.paratext {
+  p {
+    font-size: 14px;
+    line-height: 24px;
+    color: #808080;
+  }
+}
+.himgbox {
+  height: 80vh;
+  @include sm{
+    height: 400px;
+  }
+}
+.habout {
+  .container-fluid {
+    .row {
+      & > div {
+        &:first-child {
+          box-shadow: -40px 40px 0 #f5f7f9;
+        }
+        &:nth-child(3) {
+          box-shadow: 40px 40px 0 #f5f7f9;
+        }
+      }
+    }
+  }
+}
+.titlecontent {
+  p {
+    font-size: 14px;
+    line-height: 24px;
+    color: #808080;
+  }
+}
+.contact-links {
+  .conicon {
+    width: 25px;
+  }
+  a,
+  p {
+    font-size: 15px;
+    color: $black;
+  }
+}
+.cform {
+  label {
+    font-size: 14px;
+    color: #808080;
+  }
+  input[type="text"],
+  textarea {
+    border-top: none;
+    border-right: none;
+    border-left: none;
+    border-bottom: 1px solid $black;
+    font-size: 14px;
+    width: 50%;
+    @include sm{
+        width: 100%;
+    }
+    &:focus {
+      width: 100%;
+    }
+  }
+  button[type="submit"] {
+    background: $primary;
+    color: $white;
+    font-size: 16px;
+    font-weight: 600;
+    @include br(100px);
+    padding: 10px 20px;
+    border: none;
+    text-align: center;
+    width: 144px;
+  }
+}
+.threecelphone {
+  background: url(../images/cellbg.jpg) no-repeat center / cover;
+  margin: 100px 0;
+  position: relative;
+  @include af {
+    background: url(../images/3cell.png) no-repeat center;
+    background-size: contain;
+    aspect-ratio: 1;
+    width: 40vw;
+    left: 0;
+    top: -200px;
+    @include cw(1366px) {
+      width: 50vw;
+      top: -150px;
+    }
+    @include sm{
+        display: none;
+    }
+  }
+}
+.celthreeblock {
+  h2 {
+    color: $white;
+    font-size: 24px;
+    line-height: 40px;
+    font-weight: 600;
+  }
+  p {
+    color: $white;
+    font-size: 14px;
+    line-height: 24px;
+  }
+}
+.footbox {
+  background: #f9fbfc;
+  .container-lg {
+    border-left: 1px solid #aeb0b0;
+    border-right: 1px solid #aeb0b0;
+  }
+}
+.footnav {
+  gap: 30px;
+  a {
+    color: $black;
+    font-size: 14px;
+    position: relative;
+    @include af {
+      content: "/";
+      color: #808080;
+      right: -15px;
+    }
+    &:last-child {
+      @include af {
+        display: none;
+      }
+    }
+  }
+}
+.footsicons {
+  a {
+    display: inline-block;
+  }
+}
+.foottext {
+  p {
+    font-size: 14px;
+    line-height: 24px;
+    color: #808080;
+  }
+}

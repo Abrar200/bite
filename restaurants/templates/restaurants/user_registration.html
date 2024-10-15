@@ -1,0 +1,100 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="signup_main d-block">
+    <div class="container-fluid">
+        <div class="row h-100">
+            <div class="col-md-6 h-100 p-0 order-md-1 order-2">
+                <!-- Added method="POST" and CSRF token -->
+                <form method="POST" action="{% url 'user_registration' restaurant_slug=restaurant_slug %}" class="h-100">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column h-100 p-md-5 py-5 px-4 justify-content-center w-100 align-items-start gap-4">
+                        <div class="d-flex flex-column gap-2">
+                            <h1 class="text-center">Register now to use the beefcakes & Shakes App!</h1>
+                            {% if messages %}
+                                {% for message in messages %}
+                                    <p class="error_red">{{ message }}</p>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                        <div class="d-flex flex-column gap-3 w-100">
+                            <div class="d-flex flex-column flex-md-row align-items-center gap-3">
+                                <div class="d-flex flex-column gap-2 w-100">
+                                    <label>First Name</label>
+                                    <div class="d-flex align-items-center gap-2 input_box">
+                                        <div class="d-block">
+                                            <img class="w-100 h-100" src="{% static "restaurants/images/user.png" %}" alt="user" />
+                                        </div>
+                                        <input name="first_name" class="w-100" type="text" placeholder="Enter First Name" required />
+                                    </div>
+                                </div>
+                                <div class="d-flex flex-column gap-2 w-100">
+                                    <label>Last Name</label>
+                                    <div class="d-flex align-items-center gap-2 input_box">
+                                        <div class="d-block">
+                                            <img class="w-100 h-100" src="{% static "restaurants/images/user.png" %}" alt="user" />
+                                        </div>
+                                        <input name="last_name" class="w-100" type="text" placeholder="Enter Last Name" required />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-2 w-100">
+                                <label>Email Address</label>
+                                <div class="d-flex align-items-center gap-2 input_box">
+                                    <div class="d-block">
+                                        <img class="w-100 h-100" src="{% static "restaurants/images/sms.png" %}" alt="call" />
+                                    </div>
+                                    <input name="email" class="w-100" type="email" placeholder="Enter Email Address" required />
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-2 w-100">
+                                <label>Password</label>
+                                <div class="d-flex align-items-center gap-2 input_box">
+                                    <div class="d-block">
+                                        <img class="w-100 h-100" src="{% static "restaurants/images/lock.png" %}" alt="call" />
+                                    </div>
+                                    <input name="password1" class="w-100" type="password" placeholder="Enter Password" required />
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-2 w-100">
+                                <label>Confirm Password</label>
+                                <div class="d-flex align-items-center gap-2 input_box">
+                                    <div class="d-block">
+                                        <img class="w-100 h-100" src="{% static "restaurants/images/lock.png" %}" alt="call" />
+                                    </div>
+                                    <input name="password2" class="w-100" type="password" placeholder="Confirm Password" required />
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-2 w-100">
+                                <label>Phone Number</label>
+                                <div class="d-flex align-items-center gap-2 input_box">
+                                    <div class="d-block">
+                                        <img class="w-100 h-100" src="{% static "restaurants/images/call-calling.png" %}" alt="call" />
+                                    </div>
+                                    <input name="phone" class="w-100" type="text" placeholder="Enter Phone Number" required />
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-2 w-100">
+                                <label>
+                                    <input type="checkbox" name="subscribe" id="subscribe">
+                                    Subscribe to receive exclusive promotions and special offers from our restaurant
+                                </label>
+                            </div>                            
+                            <div class="d-flex flex-column pt-4 justify-content-center align-items-center gap-3">
+                                <button type="submit">Create your b!te ID</button>
+                                <a class="primary_btn" href="{% url 'login' restaurant_slug %}">I already have an account!</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 h-100 p-md-4 p-0 order-md-2 order-1">
+                <div class="d-block h-100 login_banner">
+                    <img class="w-100 h-100" src="{{ restaurant.landing_page_image.url }}" alt="img" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

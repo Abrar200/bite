@@ -1,0 +1,31 @@
+{% extends "restaurants/base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Redeem Free {{ menu_item.name }} with Points</h2>
+    <form method="post" action="{% url 'confirm_redeem_by_points' restaurant.slug %}">
+        {% csrf_token %}
+        <input type="hidden" name="menu_item_id" value="{{ menu_item.id }}">
+        
+        {% for modifier_group in menu_item.modifier_groups.all %}
+        <div class="form-group">
+            <h4>{{ modifier_group.name }}</h4>
+            <p>Select {% if modifier_group.min_selections == modifier_group.max_selections %}exactly {{ modifier_group.min_selections }}{% else %}between {{ modifier_group.min_selections }} and {{ modifier_group.max_selections }}{% endif %}</p>
+            {% for modifier in modifier_group.modifiers.all %}
+            <div class="form-check">
+                <input class="form-check-input" 
+                       type="{% if modifier_group.selection_type == 'SINGLE' %}radio{% else %}checkbox{% endif %}" 
+                       name="modifier_group_{{ modifier_group.id }}" 
+                       id="modifier_{{ modifier.id }}" 
+                       value="{{ modifier.id }}">
+                <label class="form-check-label" for="modifier_{{ modifier.id }}">
+                    {{ modifier.name }} {% if modifier.price > 0 %}(+${{ modifier.price }}){% endif %}
+                </label>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+        
+        <button type="submit" class="btn btn-primary">Confirm Redemption</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+:root {
+    --primary-color: {{ primary_color }};
+    --primary-dark: rgba(0, 0, 0, 0.2);
+    --primary-light: rgba(255, 255, 255, 0.2);
+    }
+    
+  .add-menu-section {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f6f6f6, #ffffff);
+  }
+  
+  .form-container {
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    padding: 3rem;
+  }
+  
+  .form-title {
+    font-family: 'Playfair Display', serif;
+    color: var(--primary-color);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .input-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .input-label {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input-field {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-family: 'Montserrat', sans-serif;
+    transition: all 0.3s ease;
+  }
+  
+  .input-field:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-light);
+  }
+  
+  .submit-btn {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .submit-btn:hover {
+    background-color: color-mix(in srgb, var(--primary-color), var(--primary-dark));
+  }
+  
+  .back-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    transition: all 0.3s ease;
+  }
+  
+  .back-link:hover {
+    color: color-mix(in srgb, var(--primary-color), var(--primary-dark));
+  }
+  
+  .image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+  }
+</style>
+
+<section class="add-menu-section d-flex align-items-center">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="form-container">
+          <h1 class="form-title">Add New Menu</h1>
+          <form method="POST" action="{% url 'add_menu' restaurant.slug %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-group">
+              <label class="input-label" for="menu-name">Menu Name</label>
+              <input id="menu-name" name="name" class="input-field" type="text" placeholder="Enter Menu Name" required />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="menu-description">Description</label>
+              <textarea id="menu-description" name="description" class="input-field" rows="4" placeholder="Enter Menu Description"></textarea>
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="menu-image">Menu Image</label>
+              <input id="menu-image" name="image" class="input-field" type="file" accept="image/*" />
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a href="{% url 'restaurant_dashboard' restaurant.slug %}" class="back-link">Back to Dashboard</a>
+              <button type="submit" class="submit-btn">Add Menu</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-4 d-none d-lg-block">
+        <img src="{{ restaurant.landing_page_image.url }}" alt="Restaurant Image" class="image-preview">
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

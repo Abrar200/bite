@@ -1,0 +1,294 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<div class="container">
+    <h2>{{ restaurant.name }} Dashboard</h2>
+
+    <!-- Loyalty Program Management Section -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h3>Loyalty Program Management</h3>
+            <a href="{% url 'loyalty_program_setup' restaurant.slug %}" class="btn btn-info">Setup Loyalty Program</a>
+            <a href="{% url 'digital_loyalty_card_setup' restaurant.slug %}" class="btn btn-info">Setup Digital Loyalty Cards</a>
+        </div>
+    </div>
+
+    <!-- New Orders Section -->
+    <div id="new-orders-container" class="mb-4">
+        <h3>New Orders</h3>
+        <div id="new-orders-list">
+            <!-- New orders will be inserted here by JavaScript -->
+        </div>
+    </div>
+
+    <!-- Existing Orders Section -->
+    <div id="existing-orders-container">
+        <h3>Existing Orders</h3>
+        {% for order in orders %}
+            {% include 'restaurants/_order_partial.html' with order=order %}
+        {% empty %}
+            <p>No orders available.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<section class="dashboard_main d-block" style="padding: 2rem 0; background-color: #f8f9fa;">
+    <div class="container">
+        <div class="dashboard-header text-center">
+            <h1 style="font-size: 2.5rem; margin-bottom: 1rem;">{{ restaurant.name }} Dashboard</h1>
+            <p style="font-size: 1.2rem; opacity: 0.8;">Manage your royal cuisine with elegance</p>
+        </div>
+        
+        <div class="d-flex justify-content-end mb-4">
+            <a href="{% url 'add_menu' restaurant.slug %}" class="btn-royal">Add New Menu</a>
+        </div>
+        
+        <div class="row">
+            {% for menu in menus %}
+                <div class="col-md-6 mb-4">
+                    <div class="menu-card">
+                        <div class="menu-header d-flex justify-content-between align-items-center">
+                            <h2 style="font-size: 1.5rem; margin: 0;">{{ menu.name }}</h2>
+                            <a href="{% url 'add_menu_item' restaurant.slug menu.id %}" class="btn-royal" style="font-size: 0.9rem;">Add Item</a>
+                        </div>
+                        <div class="card-body">
+                            <p style="font-style: italic; color: #666;">{{ menu.description }}</p>
+                            {% if menu.image %}
+                                <img src="{{ menu.image.url }}" alt="{{ menu.name }}" class="img-fluid mb-3" style="border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            {% endif %}
+                            <h3 style="font-size: 1.2rem; color: var(--primary-color); margin-top: 1rem;">Menu Items:</h3>
+                            <ul class="list-unstyled">
+                                {% for item in menu.items.all %}
+                                    <li class="menu-item d-flex justify-content-between align-items-center">
+                                        <span>{{ item.name }} - <strong>${{ item.price }}</strong></span>
+                                        <a href="{% url 'add_modifier' restaurant.slug item.id %}" class="btn-royal" style="font-size: 0.8rem;">Add Modifier</a>
+                                    </li>
+                                {% empty %}
+                                    <li style="text-align: center; color: #999;">No menu items yet.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="col-12">
+                    <p class="text-center" style="font-size: 1.2rem; color: #666;">No menus yet. Add a new menu to get started!</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Weekly Sales Reports Section -->
+<div class="row mb-4">
+  <div class="col-md-12">
+      <h3>Weekly Sales Reports</h3>
+      <table class="table table-striped">
+          <thead>
+              <tr>
+                  <th>Week</th>
+                  <th>Total Sales</th>
+                  <th>Status</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% for sale in weekly_sales %}
+              <tr>
+                  <td>{{ sale.week_start|date:"M d, Y" }} - {{ sale.week_end|date:"M d, Y" }}</td>
+                  <td>${{ sale.grand_total|floatformat:2 }}</td>
+                  <td>{% if sale.is_paid %}Paid{% else %}Pending{% endif %}</td>
+                  <td>
+                      <a href="{% url 'weekly_sales_report' restaurant.slug sale.week_start|date:"Y-m-d" %}" class="btn btn-sm btn-primary">View Report</a>
+                  </td>
+              </tr>
+              {% empty %}
+              <tr>
+                  <td colspan="4">No weekly sales reports available yet.</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
+</div>
+
+<script>
+    // Show the new orders container on the dashboard
+    document.addEventListener('DOMContentLoaded', function() {
+        const newOrdersContainer = document.getElementById('new-orders-container');
+        if (newOrdersContainer) {
+            newOrdersContainer.style.display = 'block';
+        }
+    });
+</script>
+
+
+<section class="sms-messaging-section mb-4">
+  <h3>Send SMS to Subscribers</h3>
+  <form id="smsForm" method="POST" action="{% url 'send_sms_to_subscribers' restaurant.slug %}">
+      {% csrf_token %}
+      <div class="form-group">
+          <label for="smsMessage">Message:</label>
+          <textarea class="form-control" id="smsMessage" name="smsMessage" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+          <label>Select Subscribers:</label>
+          <button type="button" id="selectAllSubscribers" class="btn btn-secondary btn-sm mb-2">Select All Subscribers</button>
+          <div class="subscriber-list">
+              {% for subscriber in subscribers %}
+                  <div class="form-check">
+                      <input class="form-check-input subscriber-checkbox" type="checkbox" name="selectedSubscribers" value="{{ subscriber.id }}" id="subscriber{{ subscriber.id }}">
+                      <label class="form-check-label" for="subscriber{{ subscriber.id }}">
+                          {{ subscriber.phone }} ({{ subscriber.email }})
+                      </label>
+                  </div>
+              {% empty %}
+                  <p>No subscribers available.</p>
+              {% endfor %}
+          </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Send SMS</button>
+  </form>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const smsForm = document.getElementById('smsForm');
+  const selectAllButton = document.getElementById('selectAllSubscribers');
+  const subscriberCheckboxes = document.querySelectorAll('.subscriber-checkbox');
+
+  selectAllButton.addEventListener('click', function() {
+      subscriberCheckboxes.forEach(checkbox => {
+          checkbox.checked = true;
+      });
+  });
+
+  smsForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(smsForm);
+      
+      fetch(smsForm.action, {
+          method: 'POST',
+          body: formData,
+          headers: {
+              'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+          }
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.success) {
+              alert('SMS sent successfully!');
+          } else {
+              alert('Error sending SMS: ' + data.error);
+          }
+      })
+      .catch(error => {
+          console.error('Error:', error);
+          alert('An error occurred while sending the SMS.');
+      });
+  });
+});
+</script>
+
+
+<form method="POST">
+  {% csrf_token %}
+  
+  <section class="delivery-settings-section mb-4">
+      <h3>Delivery Settings</h3>
+      <div class="form-group">
+          <label for="delivery_fee_contribution">
+              <input type="checkbox" id="delivery_fee_contribution" name="delivery_fee_contribution" 
+                     {% if restaurant.delivery_fee_contribution %}checked{% endif %}>
+              Enable Store Contribution to Delivery Fee
+          </label>
+      </div>
+      <div class="form-group">
+          <label for="delivery_fee_contribution_percentage">Store Contribution Percentage:</label>
+          <input type="number" class="form-control" id="delivery_fee_contribution_percentage" 
+                 name="delivery_fee_contribution_percentage" min="0" max="100" step="0.01" 
+                 value="{{ restaurant.delivery_fee_contribution_percentage }}">
+      </div>
+      <div class="form-group">
+          <label for="free_delivery_threshold">
+              <input type="checkbox" id="enable_free_delivery" name="enable_free_delivery" 
+                     {% if restaurant.free_delivery_threshold %}checked{% endif %}>
+              Enable Free Delivery over a certain amount
+          </label>
+      </div>
+      <div class="form-group">
+          <label for="free_delivery_threshold">Free Delivery Threshold:</label>
+          <input type="number" class="form-control" id="free_delivery_threshold" 
+                 name="free_delivery_threshold" min="0" step="0.01" 
+                 value="{{ restaurant.free_delivery_threshold|default:'' }}">
+      </div>
+  </section>
+
+  
+  <section class="opening-hours-section mb-4">
+    <h3>Opening Hours</h3>
+    {% for day, day_name in restaurant.DAYS_OF_WEEK %}
+        <div class="mb-3">
+            <h4>{{ day_name }}</h4>
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="is_{{ day }}_closed" name="is_{{ day }}_closed"
+                       {% if formatted_hours|get_item:day_name == 'Closed' %}checked{% endif %}>
+                <label class="form-check-label" for="is_{{ day }}_closed">Closed</label>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label for="{{ day }}_open">Open</label>
+                    <input type="time" class="form-control" id="{{ day }}_open" name="{{ day }}_open"
+                           value="{% if formatted_hours|get_item:day_name != 'Closed' %}{{ formatted_hours|get_item:day_name|slice:'0:5' }}{% endif %}"
+                           {% if formatted_hours|get_item:day_name == 'Closed' %}disabled{% endif %}>
+                </div>
+                <div class="col">
+                    <label for="{{ day }}_close">Close</label>
+                    <input type="time" class="form-control" id="{{ day }}_close" name="{{ day }}_close"
+                           value="{% if formatted_hours|get_item:day_name != 'Closed' %}{{ formatted_hours|get_item:day_name|slice:'-5:' }}{% endif %}"
+                           {% if formatted_hours|get_item:day_name == 'Closed' %}disabled{% endif %}>
+                </div>
+            </div>
+            <p>Current hours: {{ formatted_hours|get_item:day_name }}</p>
+        </div>
+    {% endfor %}
+  </section>
+
+
+  <!-- Add this section after the opening hours section -->
+  <section class="order-acceptance-section mb-4">
+    <h3>Order Acceptance</h3>
+    <div class="form-group">
+      <label for="is_accepting_orders">
+        <input type="checkbox" id="is_accepting_orders" name="is_accepting_orders" 
+              {% if restaurant.is_accepting_orders %}checked{% endif %}>
+        Currently Accepting Orders
+      </label>
+    </div>
+  </section>
+
+  <button type="submit" class="btn btn-primary">Update Restaurant Settings</button>
+</form>
+
+<script>
+  // Add JavaScript to toggle time inputs based on 'Closed' checkbox
+  document.addEventListener('DOMContentLoaded', function() {
+      {% for day, _ in restaurant.DAYS_OF_WEEK %}
+          document.getElementById('is_{{ day }}_closed').addEventListener('change', function() {
+              var openInput = document.getElementById('{{ day }}_open');
+              var closeInput = document.getElementById('{{ day }}_close');
+              openInput.disabled = this.checked;
+              closeInput.disabled = this.checked;
+          });
+      {% endfor %}
+  });
+</script>
+{% endblock %}

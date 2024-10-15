@@ -1,0 +1,50 @@
+{% extends "restaurants/base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Loyalty Program Setup for {{ restaurant.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="program_type">Program Type</label>
+            <select name="program_type" id="program_type" class="form-control">
+                <option value="PERCENTAGE" {% if loyalty_program.program_type == 'PERCENTAGE' %}selected{% endif %}>Percentage</option>
+                <option value="POINTS" {% if loyalty_program.program_type == 'POINTS' %}selected{% endif %}>Points per 100 Dollars</option>
+            </select>
+        </div>
+        <div class="form-group" id="percentage_field" {% if loyalty_program.program_type != 'PERCENTAGE' %}style="display:none;"{% endif %}>
+            <label for="percentage">Percentage</label>
+            <input type="number" name="percentage" id="percentage" class="form-control" value="{{ loyalty_program.percentage|default_if_none:'' }}" step="0.01">
+            <small class="form-text text-muted">Enter the percentage of the order total that will be converted to points. For example, 10 means 10% of the order total will become points.</small>
+        </div>
+        <div class="form-group" id="points_field" {% if loyalty_program.program_type != 'POINTS' %}style="display:none;"{% endif %}>
+            <label for="points_per_100">Points per 100 Dollars</label>
+            <input type="number" name="points_per_100" id="points_per_100" class="form-control" value="{{ loyalty_program.points_per_100|default_if_none:'' }}" step="0.01">
+            <small class="form-text text-muted">Enter the number of points earned per 100 dollars spent. For example, 50 means customers earn 50 points for every 100 dollars spent.</small>
+        </div>
+        <div class="form-group">
+            <label for="menu_item_points_multiplier">Menu Item Points Multiplier</label>
+            <input type="number" name="menu_item_points_multiplier" id="menu_item_points_multiplier" class="form-control" value="{{ loyalty_program.menu_item_points_multiplier|default_if_none:10 }}" step="0.01" min="0.01" required>
+            <small class="form-text text-muted">Enter the multiplier for setting menu item point prices. For example, 10 means a $5 item would cost 50 points.</small>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const programTypeSelect = document.getElementById('program_type');
+        const percentageField = document.getElementById('percentage_field');
+        const pointsField = document.getElementById('points_field');
+
+        programTypeSelect.addEventListener('change', function() {
+            if (this.value === 'PERCENTAGE') {
+                percentageField.style.display = 'block';
+                pointsField.style.display = 'none';
+            } else {
+                percentageField.style.display = 'none';
+                pointsField.style.display = 'block';
+            }
+        });
+    });
+</script>
+{% endblock %}

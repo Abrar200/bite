@@ -1,0 +1,26 @@
+<div class="card mb-3" id="order-{{ order.id }}">
+  <div class="card-body">
+    <h5 class="card-title">Order #{{ order.id }}</h5>
+    <p class="card-text"><strong>Status:</strong> {{ order.get_status_display }}</p>
+    <p class="card-text"><strong>Total:</strong> ${{ order.total_price }}</p>
+    <p class="card-text"><strong>Type:</strong> {{ order.get_order_type_display }}</p>
+    {% if order.delivery_location %}
+      <p class="card-text"><strong>Delivery Location:</strong> {{ order.delivery_location }}</p>
+    {% endif %}
+    <h6>Order Items:</h6>
+    <ul>
+    {% for item in order.items.all %}
+      <li>{{ item.quantity }}x {{ item.menu_item.name }} - ${{ item.price }}
+        {% if item.modifiers.all %}
+          <ul>
+          {% for modifier in item.modifiers.all %}
+            <li>{{ modifier.modifier.name }} - ${{ modifier.price }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'order_detail' slug=order.restaurant.slug order_id=order.id %}" class="btn btn-primary">View Details</a>
+  </div>
+</div>

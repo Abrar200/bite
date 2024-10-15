@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+{% load static %}
+<html>
+<head>
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .email-container {
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        .email-header {
+            margin-bottom: 20px;
+        }
+
+        .verify-button {
+            display: block;
+            background-color: {{ restaurant.primary_color }};
+            color: white;
+            text-align: center;
+            padding: 10px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .link-style {
+            color: {{ restaurant.primary_color }};
+            word-break: break-all;
+            margin-bottom: 20px;
+        }
+
+        .footer-text {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .footer-social a {
+            margin: 0 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <header class="email-header">
+            <img src="{{ restaurant.logo_image.url }}" alt="{{ restaurant.name }}" style="height: 30px;">
+        </header>
+        
+        <h1 style="font-size: 24px; margin-bottom: 5px;">Verify Your Email Address</h1>
+        
+        <p style="margin-bottom: 20px;">Hi {{ user.username }},</p>
+        <p style="margin-bottom: 20px;">
+            Thank you for registering with {{ restaurant.name }}. To complete your registration and activate your account, please verify your email address by clicking the link below:
+        </p>
+        
+        <a href="{{ verification_url }}" style="text-color: white" class="verify-button">Verify Email</a>
+        
+        <p style="margin-bottom: 20px;">If the button above doesn't work, copy and paste the following link into your web browser:</p>
+        <p class="link-style"><a href="{{ verification_url }}">{{ verification_url }}</a></p>
+        
+        <p style="margin-bottom: 20px;">
+            If you did not register for this account, please ignore this email or contact us at {{ restaurant.email }} if you have any concerns.
+        </p>
+        
+        <p class="footer-text">Got a question? Email us at {{ restaurant.email }}</p>
+        
+        <p class="footer-text" style="font-weight: bold; margin-bottom: 10px;">DON'T FORGET TO FOLLOW US</p>
+        
+        <div style="align: centre;" class="footer-social">
+            {% if restaurant.facebook_link %}
+                <a href="{{ restaurant.facebook_link }}" target="_blank">Facebook</a>
+            {% endif %}
+            {% if restaurant.instagram_link %}
+                <a href="{{ restaurant.instagram_link }}" target="_blank">Instagram</a>
+            {% endif %}
+            {% if restaurant.youtube_link %}
+                <a href="{{ restaurant.youtube_link }}" target="_blank">YouTube</a>
+            {% endif %}
+            {% if restaurant.twitter_link %}
+                <a href="{{ restaurant.twitter_link }}" target="_blank">Twitter</a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,162 @@
+{% extends 'restaurants/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Restaurant Registration</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="d-flex flex-column gap-2">
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="name">Restaurant Name</label>
+                <input type="text" id="name" name="name" class="form-control" required>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="password1">Password</label>
+                <input type="password" id="password1" name="password1" class="form-control" required>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="password2">Confirm Password</label>
+                <input type="password" id="password2" name="password2" class="form-control" required>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control"></textarea>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="landing_page_tagline">Landing Page Tagline</label>
+                <input type="text" id="landing_page_tagline" name="landing_page_tagline" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="address">Address</label>
+                <input type="text" id="address" name="address" class="form-control" required>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="phone">Phone</label>
+                <input type="tel" id="phone" name="phone" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="primary_color">Primary Color</label>
+                <input type="color" id="primary_color" name="primary_color" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="footer_text">Footer Text</label>
+                <input type="text" id="footer_text" name="footer_text" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="facebook_link">Facebook Link</label>
+                <input type="url" id="facebook_link" name="facebook_link" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="instagram_link">Instagram Link</label>
+                <input type="url" id="instagram_link" name="instagram_link" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="youtube_link">YouTube Link</label>
+                <input type="url" id="youtube_link" name="youtube_link" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="twitter_link">Twitter Link</label>
+                <input type="url" id="twitter_link" name="twitter_link" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="landing_page_image">Landing Page Image 1</label>
+                <input type="file" id="landing_page_image" name="landing_page_image" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="logo_image">Logo Image</label>
+                <input type="file" id="logo_image" name="logo_image" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="favicon">Favicon</label>
+                <input type="file" id="favicon" name="favicon" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="about_us_image1">About Us Image 1</label>
+                <input type="file" id="about_us_image1" name="about_us_image1" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="about_us_text1">About Us Text 1</label>
+                <textarea id="about_us_text1" name="about_us_text1" class="form-control"></textarea>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="about_us_image2">About Us Image 2</label>
+                <input type="file" id="about_us_image2" name="about_us_image2" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="about_us_text2">About Us Text 2</label>
+                <textarea id="about_us_text2" name="about_us_text2" class="form-control"></textarea>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="about_us_image3">About Us Image 3</label>
+                <input type="file" id="about_us_image3" name="about_us_image3" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="about_us_text3">About Us Text 3</label>
+                <textarea id="about_us_text3" name="about_us_text3" class="form-control"></textarea>
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="contact_us_image">Contact Us Image</label>
+                <input type="file" id="contact_us_image" name="contact_us_image" class="form-control">
+            </div>
+            <div class="d-flex flex-column gap-2 w-100">
+                <label for="map_iframe_src">Map iFrame Source</label>
+                <input type="text" id="map_iframe_src" name="map_iframe_src" class="form-control">
+            </div>
+
+            <h3 class="mt-4">Opening Hours</h3>
+            {% for day, day_name in DAYS_OF_WEEK %}
+                <div class="mb-3">
+                    <h4>{{ day_name }}</h4>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="is_{{ day }}_closed" name="is_{{ day }}_closed">
+                        <label class="form-check-label" for="is_{{ day }}_closed">Closed</label>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <label for="{{ day }}_open">Open</label>
+                            <input type="time" class="form-control" id="{{ day }}_open" name="{{ day }}_open">
+                        </div>
+                        <div class="col">
+                            <label for="{{ day }}_close">Close</label>
+                            <input type="time" class="form-control" id="{{ day }}_close" name="{{ day }}_close">
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+
+            <script>
+                // Add JavaScript to toggle time inputs based on 'Closed' checkbox
+                document.addEventListener('DOMContentLoaded', function() {
+                    {% for day, _ in DAYS_OF_WEEK %}
+                        document.getElementById('is_{{ day }}_closed').addEventListener('change', function() {
+                            var openInput = document.getElementById('{{ day }}_open');
+                            var closeInput = document.getElementById('{{ day }}_close');
+                            openInput.disabled = this.checked;
+                            closeInput.disabled = this.checked;
+                        });
+                    {% endfor %}
+                });
+            </script>
+            <button type="submit" class="btn btn-primary mt-3">Register</button>
+        </div>
+    </form>
+</div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places"></script>
+<script>
+    function initAutocomplete() {
+        var input = document.getElementById('address');
+        var autocomplete = new google.maps.places.Autocomplete(input, {
+            types: ['address'], // Restrict to addresses
+            componentRestrictions: { country: 'AU' } // Restrict to Australia
+        });
+    }
+
+    google.maps.event.addDomListener(window, 'load', initAutocomplete);
+</script>
+
+{% endblock %}

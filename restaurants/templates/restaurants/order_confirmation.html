@@ -1,0 +1,65 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h2 class="mb-0">Order Confirmation</h2>
+                </div>
+                <div class="card-body">
+                    <h4 class="card-title">Thank you for your order!</h4>
+                    <hr>
+                    <h5>Order Details:</h5>
+                    <p><strong>Order ID:</strong> {{ order.id }}</p>
+                    <p><strong>Restaurant:</strong> {{ order.restaurant.name }}</p>
+                    <p><strong>Order Type:</strong> {{ order.get_order_type_display }}</p>
+                    <p><strong>Status:</strong> {{ order.get_status_display }}</p>
+                    <p><strong>Subtotal:</strong> ${{ order.total_price|floatformat:2 }}</p>
+                    {% if order.delivery_fee > 0 %}
+                        <p><strong>Delivery Fee:</strong> ${{ order.delivery_fee|floatformat:2 }}</p>
+                        <p><strong>Store Contribution:</strong> ${{ order.store_contribution|floatformat:2 }}</p>
+                        <p><strong>Your Delivery Fee:</strong> ${{ order.customer_delivery_fee|floatformat:2 }}</p>
+                        {% if order.customer_delivery_fee == 0 %}
+                            <p><strong>Free Delivery Applied!</strong></p>
+                        {% endif %}
+                    {% endif %}
+                    <p><strong>Total Price:</strong> ${{ order.total_with_delivery|floatformat:2 }}</p>
+                    <hr>
+                    <h5>Order Items:</h5>
+                    <ul class="list-group">
+                        {% for item in order.items.all %}
+                            <li class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">{{ item.menu_item.name }}</h6>
+                                        <small>Quantity: {{ item.quantity }}</small>
+                                        {% if item.notes %}
+                                            <br><small>Notes: {{ item.notes }}</small>
+                                        {% endif %}
+                                    </div>
+                                    <span>${{ item.price|floatformat:2 }}</span>
+                                </div>
+                                {% if item.modifiers.all %}
+                                    <ul class="list-unstyled ml-3 mb-0">
+                                        {% for modifier in item.modifiers.all %}
+                                            <li>
+                                                <small>{{ modifier.modifier.name }} - ${{ modifier.price|floatformat:2 }}</small>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'restaurant_landing_page' order.restaurant.slug %}" class="btn btn-primary">Return to Restaurant</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

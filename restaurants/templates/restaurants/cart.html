@@ -1,0 +1,359 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="d-md-none d-block mobile_head">
+    <div class="container-lg">
+        <a href="{% url 'restaurant_landing_page' restaurant.slug %}" class="d-block arrow-left">
+            <img class="w-100 h-100" src="{% static 'restaurants/images/arrow-left.png' %}" alt="Back">
+        </a>
+        <h2>Cart</h2>
+    </div>
+</div>
+
+<section class="d-block py-md-5 pb-4 pt-3 cart_order1">
+    <div class="container-lg h-100">
+        <ul class="nav nav-tabs border-none justify-content-center align-items-stretch" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active cart_order_step h-100" id="home-tab" data-bs-toggle="tab"
+                    data-bs-target="#home-tab-pane" type="button" role="tab" aria-controls="home-tab-pane"
+                    aria-selected="true">
+                    <div class="step d-flex flex-column gap-2 justify-content-center align-items-center h-100">
+                        <h5>Step 1</h5>
+                        <div class="d-block step-image">
+                            <img class="w-100 h-100" src="{% static 'restaurants/images/order_cart.png' %}" alt="Order">
+                        </div>
+                        <p>Order</p>
+                        <div class="d-block green_check">
+                            <img class="w-100 h-100" src="{% static 'restaurants/images/tick-circle.png' %}" alt="tick">
+                        </div>
+                    </div>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link cart_order_step h-100" id="profile-tab" data-bs-toggle="tab"
+                    data-bs-target="#profile-tab-pane" type="button" role="tab" aria-controls="profile-tab-pane"
+                    aria-selected="false">
+                    <div class="step d-flex flex-column gap-2 justify-content-center align-items-center h-100">
+                        <h5>Step 2</h5>
+                        <div class="d-block step-image">
+                            <img class="w-100 h-100" src="{% static 'restaurants/images/asap_cart.png' %}" alt="ASAP">
+                        </div>
+                        <p>ASAP</p>
+                        <div class="d-block green_check">
+                            <img class="w-100 h-100" src="{% static 'restaurants/images/tick-circle.png' %}" alt="tick">
+                        </div>
+                    </div>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link cart_order_step h-100" id="contact-tab" data-bs-toggle="tab"
+                    data-bs-target="#contact-tab-pane" type="button" role="tab" aria-controls="contact-tab-pane"
+                    aria-selected="false">
+                    <div class="step d-flex flex-column gap-2 justify-content-center align-items-center h-100">
+                        <h5>Step 3</h5>
+                        <div class="d-block step-image">
+                            <img class="w-100 h-100" src="{% static 'restaurants/images/payment_cart.png' %}" alt="Payment">
+                        </div>
+                        <p>Add a Payment Method</p>
+                        <div class="d-block green_check">
+                            <img class="w-100 h-100" src="{% static 'restaurants/images/tick-circle.png' %}" alt="tick">
+                        </div>
+                    </div>
+                </button>
+            </li>
+        </ul>
+    </div>
+</section>
+
+<section class="order_completed pt-3 pb-5">
+    <div class="container-lg">
+        <div class="row gy-5">
+            <div class="col-12 m-0">
+                <!-- Cart Items -->
+                <div class="cart-items">
+                    {% if cart_items %}
+                        {% for item in cart_items %}
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <img src="{{ item.menu_item.image1.url }}" class="img-fluid rounded" alt="{{ item.menu_item.name }}">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h5 class="card-title">{{ item.menu_item.name }}</h5>
+                                        <p class="card-text">{{ item.menu_item.description }}</p>
+                                        <p>Quantity: {{ item.quantity }}</p>
+                                        <p>Notes: {{ item.notes|default:"No notes" }}</p>
+                                        {% if item.selected_modifiers.all %}
+                                            <h6>Modifiers:</h6>
+                                            <ul>
+                                                {% for modifier in item.selected_modifiers.all %}
+                                                    <li>{{ modifier.modifier.name }} {% if modifier.modifier.price > 0 %}(+${{ modifier.modifier.price|floatformat:2 }}){% endif %}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-4 text-right">
+                                        <h5>Item Total: ${{ item.total_price|floatformat:2 }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p>Your cart is empty. Add some items to get started!</p>
+                    {% endif %}
+                </div>
+
+                <!-- Order Type Selection -->
+                <div class="order-type-selection mb-3">
+                    <h5>Select Order Type:</h5>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="orderType" id="takeout" value="TAKEOUT" checked>
+                        <label class="form-check-label" for="takeout">
+                            Takeout
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="orderType" id="pickup" value="PICKUP">
+                        <label class="form-check-label" for="pickup">
+                            Pickup/Eat-in
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="orderType" id="delivery" value="DELIVERY">
+                        <label class="form-check-label" for="delivery">
+                            Delivery
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Delivery Location (hidden by default) -->
+                <div id="deliveryLocationContainer" class="mb-3" style="display: none;">
+                    <label for="deliveryLocation" class="form-label">Delivery Location</label>
+                    <input type="text" class="form-control" id="deliveryLocation" placeholder="Enter delivery address">
+                    <div id="deliveryDistanceMessage" class="text-danger mt-2" style="display: none;"></div>
+                </div>
+
+                <div id="deliveryFeeContainer" class="mb-3" style="display: none;">
+                    <h6>Delivery Fee: <span id="deliveryFee"></span></h6>
+                    <p id="distanceInfo"></p>
+                </div>
+
+                <!-- Total Price -->
+                <div class="d-flex flex-column gap-3 total_pay">
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <h6>Subtotal</h6>
+                        <p id="subtotal">${{ total_price|floatformat:2 }}</p>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gap-3" id="deliveryFeeRow" style="display: none;">
+                        <h6>Delivery Fee</h6>
+                        <p id="deliveryFeeAmount"></p>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between gap-3">
+                        <h6>Total Price</h6>
+                        <p id="totalPrice">${{ total_price|floatformat:2 }}</p>
+                    </div>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div id="checkoutStatus" class="text-danger"></div>
+                        <button id="checkoutBtn" class="pay_btn" style="display: none;">Proceed to Checkout</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&libraries=places"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM fully loaded and parsed');
+
+        const stripe = Stripe('{{ STRIPE_PUBLISHABLE_KEY }}');
+        console.log('Stripe initialized');
+
+        const deliveryLocationInput = document.getElementById('deliveryLocation');
+        const deliveryLocationContainer = document.getElementById('deliveryLocationContainer');
+        const deliveryDistanceMessage = document.getElementById('deliveryDistanceMessage');
+        const checkoutBtn = document.getElementById('checkoutBtn');
+        const checkoutStatus = document.getElementById('checkoutStatus');
+        const orderTypeInputs = document.querySelectorAll('input[name="orderType"]');
+
+        console.log('DOM elements selected');
+
+        function initAutocomplete() {
+            console.log('Initializing autocomplete');
+            const autocomplete = new google.maps.places.Autocomplete(deliveryLocationInput, {
+                types: ['address'],
+                componentRestrictions: { country: 'AU' }
+            });
+
+            autocomplete.addListener('place_changed', function() {
+                console.log('Place changed');
+                const place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    console.log("No details available for input: '" + place.name + "'");
+                    return;
+                }
+                checkDeliveryDistance(place.formatted_address);
+            });
+        }
+
+        let deliveryFee = 0;
+
+        async function checkDeliveryDistance(address) {
+            console.log('Checking delivery distance for:', address);
+            try {
+                const response = await fetch('{% url "check_delivery_distance" slug=restaurant.slug %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({ address: address })
+                });
+                const data = await response.json();
+                console.log('Delivery distance check response:', data);
+                if (data.within_range) {
+                    deliveryDistanceMessage.style.display = 'none';
+                    checkoutBtn.disabled = false;
+                    deliveryFeeContainer.style.display = 'block';
+                    deliveryFee = parseFloat(data.delivery_fee);
+                    deliveryFeeAmount.textContent = `$${deliveryFee.toFixed(2)}`;
+                    distanceInfo.textContent = `Address is ${data.distance_miles} miles (${data.distance_km} km) from the restaurant.`;
+                    updateTotalPrice();
+                    console.log('Address within delivery range');
+                } else {
+                    deliveryDistanceMessage.textContent = 'Sorry, this address is outside our delivery range.';
+                    deliveryDistanceMessage.style.display = 'block';
+                    deliveryFeeContainer.style.display = 'none';
+                    checkoutBtn.disabled = true;
+                    console.log('Address outside delivery range');
+                }
+            } catch (error) {
+                console.error('Error checking delivery distance:', error);
+                alert('An error occurred while checking the delivery distance. Please try again.');
+            }
+        }
+
+        function updateTotalPrice() {
+            const subtotal = parseFloat(document.getElementById('subtotal').textContent.replace('$', ''));
+            const total = subtotal + deliveryFee;
+            document.getElementById('totalPrice').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('deliveryFeeRow').style.display = deliveryFee > 0 ? 'flex' : 'none';
+        }
+
+        async function checkRestaurantAvailability() {
+            try {
+                const response = await fetch("{% url 'check_restaurant_availability' restaurant.slug %}", {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+                console.log('Restaurant availability:', data);
+
+                if (data.is_available) {
+                    checkoutStatus.textContent = '';
+                    checkoutBtn.style.display = 'block';
+                } else {
+                    checkoutStatus.textContent = data.message;
+                    checkoutBtn.style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Error checking restaurant availability:', error);
+                checkoutStatus.textContent = 'Unable to check restaurant availability. Please try again.';
+                checkoutBtn.style.display = 'none';
+            }
+        }
+
+        orderTypeInputs.forEach(function(input) {
+            input.addEventListener("change", function() {
+                console.log('Order type changed:', this.value);
+                if (this.value === 'DELIVERY') {
+                    deliveryLocationContainer.style.display = 'block';
+                    console.log('Showing delivery location input');
+                } else {
+                    deliveryLocationContainer.style.display = 'none';
+                    deliveryDistanceMessage.style.display = 'none';
+                    deliveryFeeContainer.style.display = 'none';
+                    deliveryFee = 0;
+                    updateTotalPrice();
+                    checkoutBtn.disabled = false;
+                    console.log('Hiding delivery location input');
+                }
+                checkRestaurantAvailability();
+            });
+        });
+
+        async function proceedToCheckout() {
+            console.log('Proceeding to checkout');
+            const orderType = document.querySelector('input[name="orderType"]:checked').value;
+            const deliveryLocation = deliveryLocationInput.value;
+        
+            console.log('Order type:', orderType);
+            console.log('Delivery location:', deliveryLocation);
+            console.log('Delivery fee:', deliveryFee);
+        
+            if (orderType === 'DELIVERY' && !deliveryLocation) {
+                console.log('Delivery selected but no address provided');
+                alert('Please enter a delivery address.');
+                return;
+            }
+
+            try {
+                console.log('Sending checkout request');
+                const response = await fetch("{% url 'create_checkout_session' restaurant.slug %}", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        orderType: orderType,
+                        deliveryLocation: deliveryLocation,
+                        deliveryFee: deliveryFee
+                    })
+                });
+        
+                const data = await response.json();
+                console.log('Checkout response:', data);
+        
+                if (data.sessionId) {
+                    console.log('Redirecting to Stripe checkout');
+                    const result = await stripe.redirectToCheckout({ sessionId: data.sessionId });
+                    if (result.error) {
+                        console.error('Stripe redirect error:', result.error);
+                        alert('Error: ' + result.error.message);
+                    }
+                } else if (data.redirect) {
+                    console.log('Redirecting to order confirmation');
+                    window.location.href = data.redirect;
+                } else if (data.error) {
+                    console.error('Error from server:', data.error);
+                    alert('Error: ' + data.error);
+                } else {
+                    console.error('Unexpected response:', data);
+                    alert('An unexpected error occurred. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during checkout:', error);
+                alert('An error occurred while processing your request. Please try again.');
+            }
+        }        
+
+        checkoutBtn.addEventListener('click', proceedToCheckout);
+        console.log('Checkout button event listener added');
+
+        initAutocomplete();
+        console.log('Autocomplete initialized');
+
+        // Check restaurant availability when the page loads
+        checkRestaurantAvailability();
+    });
+</script>
+{% endblock %}

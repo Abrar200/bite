@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+{% load static %}
+
+  <head>
+    <title>{{ restaurant.name }} - Bite</title>
+
+
+    <meta charset="utf-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <link rel="shortcut icon" href="{{ restaurant.logo_image.url }}" />
+ 
+    <meta
+
+      name="viewport"
+
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+
+    />
+    
+    <link href="{% static "restaurants/css/bootstrap.min.css" %}" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="{% static "restaurants/css/custom-style.css" %}" />
+
+    <link rel="stylesheet" type="text/css" href="{% static "restaurants/sass/main.css" %}" />
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <style>
+      :root {
+          --primary-color: {{ primary_color }};
+      }
+    </style>
+
+    <script src="{% static 'js/reconnecting-websocket.min.js' %}"></script>
+
+  </head>
+
+  <body>
+
+    <audio id="notification-sound" src="{% static 'restaurants/audio/notification.mp3' %}" preload="auto"></audio>
+
+    <!-- <div class="overlayblock" id="ovly"></div> -->
+
+    <header id="header">
+
+      <div class="main-nav d-block">
+
+        <nav class="navbar navbar-expand-lg navbar-light">
+
+          <div class="container-lg">
+            
+            {% if restaurant_slug %}
+              <a class="navbar-brand fulw" href="{% url 'restaurant_landing_page' restaurant_slug %}">
+                  {% if restaurant.logo_image %}
+                      <img style="height: 100px;" src="{{ restaurant.logo_image.url }}" alt="{{ restaurant.name }} logo" />
+                  {% else %}
+                      {{ restaurant.name }}
+                  {% endif %}
+              </a>
+          {% else %}
+              <a class="navbar-brand fulw" href="/">Home</a>
+          {% endif %}
+
+            <button
+
+              class="navbar-toggler rounded-0"
+
+              type="button"
+
+              data-bs-toggle="collapse"
+
+              data-bs-target="#navbarSupportedContent"
+
+              aria-controls="navbarSupportedContent"
+
+              aria-expanded="false"
+
+              aria-label="Toggle navigation"
+
+            >
+
+              <i class="fal fa-bars"></i>
+
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+              <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+
+                <li class="nav-item active">
+                  {% if restaurant_slug %}
+                  <a class="nav-link" aria-current="page" href="{% url "restaurant_landing_page" restaurant_slug %}"
+
+                    >Home</a
+
+                  >
+                  {% endif %}
+
+
+                </li>
+
+                <li class="nav-item">
+
+                  <a class="nav-link" href="#">Locations</a>
+
+                </li>
+
+                <li class="nav-item">
+
+                  <a class="nav-link" href="#">Popular</a>
+
+                </li>
+
+                <li class="nav-item">
+
+                  <a class="nav-link" href="#">Categories</a>
+
+                </li>
+
+                <!-- <li class="nav-item dropdown">
+
+                  <a
+
+                    class="nav-link dropdown-toggle"
+
+                    href="#"
+
+                    id="navbarDropdown"
+
+                    role="button"
+
+                    data-bs-toggle="dropdown"
+
+                    aria-expanded="false"
+
+                  >
+
+                    Dropdown
+
+                  </a>
+
+                  <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+
+                    <li>
+
+                      <a class="dropdown-item" href="#">Another action</a>
+
+                    </li>
+
+                    <li>
+
+                      <a class="dropdown-item" href="#">Something else here</a>
+
+                    </li>
+
+                  </ul>
+
+                </li> -->
+
+                <li class="nav-item">
+
+                  <a class="nav-link" href="#">About</a>
+
+                </li>
+
+                {% if is_owner %}
+                  <li class="nav-item">
+                      <a class="nav-link" href="{% url 'restaurant_dashboard' restaurant.slug %}">Restaurant Dashboard</a>
+                  </li>
+                {% endif %}
+
+              </ul>
+
+              <div class="d-md-flex gap-4 align-items-center">
+
+                <div class="searchmain">
+
+                  <form action="">
+
+                    <div class="d-flex align-items-center gap-1">
+
+                      <div class="flex-shrink-0">
+                        
+                        <i class="fa fa-search" style="color: {{ restaurant.primary_color }}" aria-hidden="true"></i>
+
+                      </div>
+
+                      <div class="flex-grow-1">
+
+                        <input
+
+                          type="text"
+
+                          name=""
+
+                          id=""
+
+                          placeholder="Search for food"
+
+                        />
+
+                      </div>
+
+                    </div>
+
+                  </form>
+
+                </div>
+                {% if restaurant.slug %}
+                <div class="cartbox">
+                  <a href="{% url "cart_view" restaurant.slug %}">
+                    <button type="">
+                      
+                      <img src="{% static "restaurants/images/shopping-cart.svg" %}" alt="icon" />
+
+                    </button>
+                  </a>
+                </div>
+                {% endif %}
+                
+                  <div class="userphoto rel">
+
+                    <div class="cartbox">
+
+                      <button type="">
+                        
+                        <i class="fa-solid fa-user" style="color: #ffffff;"></i>
+    
+                      </button>
+    
+                    </div>
+                    
+                      <div class="dropuser" id="dropuser">
+
+                        <div class="d-flex flex-column gap-0">
+                          {% if request.user.is_authenticated %}
+                            <a href="#" class="d-flex gap-3 align-items-center">
+
+                              <div class="flex-shrink-0">
+
+                                <div class="notificon">
+
+                                  <i class="fa-regular fa-user"></i>
+
+                                </div>
+
+                              </div>
+
+                              <div class="flex-grow-1">
+
+                                <h6>Account</h6>
+
+                              </div>
+
+                              <div class="flex-shrink-0">
+
+                                <p class="notifnum">4</p>
+
+                              </div>
+
+                            </a>
+
+                            <a href="#" class="d-flex gap-3 align-items-center">
+
+                              <div class="flex-shrink-0">
+
+                                <div class="notificon">
+
+                                  <i class="fal fa-id-card"></i>
+
+                                </div>
+
+                              </div>
+
+                              <div class="flex-grow-1">
+
+                                <h6>Loyalty Cards</h6>
+
+                              </div>
+
+                              <div class="flex-shrink-0">
+
+                                <p class="notifnum">8</p>
+
+                              </div>
+
+                            </a>
+                          {% endif %}
+
+                          {% if request.user.is_authenticated %}
+                            <li class="nav-item">
+                              <a class="nav-link" href="{% url 'user_rewards' restaurant.slug %}">My Rewards</a>
+                            </li>
+                          {% endif %}
+                          
+                          {% if request.user.is_authenticated %}
+                              {% if restaurant_slug %}
+                                  <a href="{% url 'logout' %}?restaurant_slug={{ restaurant_slug }}" class="d-flex gap-3 align-items-center">
+                              {% else %}
+                                  <a href="{% url 'logout' %}" class="d-flex gap-3 align-items-center">
+                              {% endif %}
+                                  <div class="flex-shrink-0">
+                                      <div class="notificon">
+                                          <i class="fal fa-sign-out"></i>
+                                      </div>
+                                  </div>
+                                  <div class="flex-grow-1">
+                                      <h6>Logout</h6>
+                                  </div>
+                              </a>
+                          {% else %}
+                              {% if request.resolver_match.url_name == 'restaurant_registration' %}
+                                  <a href="#" class="d-flex gap-3 align-items-center">
+                              {% elif restaurant_slug %}
+                                  <a href="{% url 'login' restaurant_slug %}" class="d-flex gap-3 align-items-center">
+                              {% else %}
+                                  <a href="#" class="d-flex gap-3 align-items-center">
+                              {% endif %}
+                                  <div class="flex-shrink-0">
+                                      <div class="notificon">
+                                          <i class="fal fa-sign-out"></i>
+                                      </div>
+                                  </div>
+                                  <div class="flex-grow-1">
+                                      <h6>Login</h6>
+                                  </div>
+                              </a>
+                          {% endif %}                  
+
+                        </div>
+
+                      </div>
+
+                  </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </nav>
+
+      </div>
+      {% if messages %}
+        {% for message in messages %}
+            <p class="error_red">{{ message }}</p>
+        {% endfor %}
+      {% endif %}
+    </header>
+
+
+    {% if user.is_authenticated and user.is_restaurant_admin %}
+      <!-- New Order Modal -->
+      <div class="modal fade" id="newOrderModal" tabindex="-1" aria-labelledby="newOrderModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="newOrderModalLabel">New Order Received</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body" id="newOrderModalBody">
+                      <!-- Order details will be inserted here -->
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-primary" id="viewOrderButton">View Order</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+      <script>
+        (function() {
+            const restaurantSlug = "{{ user.restaurant.slug }}";
+            const socket = new ReconnectingWebSocket(`ws://${window.location.host}/ws/orders/${restaurantSlug}/`);
+            const notificationSound = document.getElementById("notification-sound");
+            const newOrderModal = new bootstrap.Modal(document.getElementById('newOrderModal'));
+            const newOrderModalBody = document.getElementById('newOrderModalBody');
+            const viewOrderButton = document.getElementById('viewOrderButton');
+            let currentOrderId;
+
+            socket.onopen = function(event) {
+                console.log("WebSocket connection established");
+            };
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                console.log("Received WebSocket message:", data);
+
+                if (data.message && data.message.status === "new_order") {
+                    console.log("New order received:", data.message.order_id);
+                    notificationSound.play().catch(error => console.error("Error playing sound:", error));
+
+                    showNotification(data.message.order_id);
+                    updateOrderDetails(data.message.order_id);
+                }
+            };
+
+            socket.onerror = function(error) {
+                console.error("WebSocket error:", error);
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket connection closed:", event);
+            };
+
+            function showNotification(orderId) {
+                if ("Notification" in window && Notification.permission === "granted") {
+                    const notification = new Notification("New Order", {
+                        body: `New order #${orderId} has been received!`,
+                        icon: "{% static 'path/to/your/icon.png' %}"
+                    });
+
+                    notification.onclick = function() {
+                        window.focus();
+                        showOrderModal(orderId);
+                    };
+                }
+            }
+
+            function updateOrderDetails(orderId) {
+                fetch(`/restaurant/${restaurantSlug}/order-partial/${orderId}/`)
+                    .then(response => response.text())
+                    .then(orderHtml => {
+                        newOrderModalBody.innerHTML = orderHtml;
+                        currentOrderId = orderId;
+                        showOrderModal(orderId);
+                    })
+                    .catch(error => console.error("Error fetching order details:", error));
+            }
+
+            function showOrderModal(orderId) {
+                newOrderModal.show();
+            }
+
+            viewOrderButton.addEventListener('click', function() {
+                if (currentOrderId) {
+                    window.location.href = `/restaurant/${restaurantSlug}/order/${currentOrderId}/`;
+                }
+            });
+
+            // Request notification permission
+            if ("Notification" in window && Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+        })();
+      </script>
+    {% endif %}
+
+    {% block content %}
+    {% endblock %}
+
+     <footer>
+
+      <div class="fttopp d-block">
+
+        <div class="container-lg">
+
+          <div class="row gy-4 align-items-center">
+
+            <div class="col-md-3">
+
+              <div class="d-flex flex-column gap-3 ftblock">
+
+                <div class="ftlogo fulw">
+                  
+                  <img src="{{ restaurant.logo_image.url }}" alt="image" />
+
+                </div>
+
+                <p>
+
+                  {{ restaurant.description }}
+
+                </p>
+
+                <a href="mailto:{{ restaurant.email }}">{{ restaurant.email }}</a>
+
+                <a href="tel:{{ restaurant.phone }}">{{ restaurant.phone }}</a>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-2 ms-auto">
+
+              <div class="d-flex flex-column gap-2 ftblock">
+
+         
+
+                <div class="d-flex flex-column gap-4 ft-links">
+
+                  <a href="#">Help</a>
+
+                  <a href="#">FAQ'S</a>
+
+                  <a href="#">About Us</a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+              <div class="d-flex flex-column gap-lg-2 ftblock">
+
+                <div class="d-flex flex-column gap-4 ft-links">
+
+                  <a href="#">Contact Us</a>
+
+                  <a href="#">Journal</a>
+
+                  <a href="#">Privacy Policy</a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-2">
+
+              <div class="d-flex flex-column gap-3 ftblock">
+
+                <div class="d-flex flex-column gap-4 ft-links">
+
+                  <a href="#">Help</a>
+
+                  <a href="#">FAQ'S</a>
+
+                  <a href="#">About Us</a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="copyrightblock py-3">
+
+        <div class="container-lg">
+
+          <div class="row gy-4">
+
+            <div class="col-md-6">
+
+              <p>&copy; copy rights 2024. All rights reserved.</p>
+
+            </div>
+
+            <div class="col-md-6">
+
+              <div class="d-flex justify-content-md-end">
+
+                <div class="s-icons d-flex gap-3 align-items-center">
+
+                  <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                  <a href="#"><i class="fab fa-instagram"></i></a>
+
+                  <a href="#"><i class="fab fa-youtube"></i></a>
+
+                  <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </footer>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{% static "restaurants/js/popper.min.js" %}"></script>
+    <script src="{% static "restaurants/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "restaurants/js/slick.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+      $(".catlist").slick({
+
+        centerMode: false,
+
+        centerPadding: "0px",
+
+        slidesToShow: 6,
+
+        dots: false,
+
+        infinite: false,
+
+        arrows: true,
+
+        responsive: [
+
+          {
+
+            breakpoint: 768,
+
+            settings: {
+
+              centerPadding: "0px",
+
+              slidesToShow: 4,
+
+            },
+
+          },
+
+          {
+
+            breakpoint: 480,
+
+            settings: {
+
+              centerPadding: "0px",
+
+              slidesToShow: 2,
+
+            },
+
+          },
+
+        ],
+
+      });
+
+      $(document).ready(function() {
+  var $slider = $(".catlist");
+
+  if ($slider.length) {
+    var sliderCounter = document.createElement("div");
+    sliderCounter.classList.add("slider__counter");
+
+    var updateSliderCounter = function(slick, currentIndex) {
+      var currentSlide = slick.slickCurrentSlide() + 1; // Slick index starts from 0
+      var slidesCount = slick.slideCount;
+      $(sliderCounter).text(currentSlide + "/" + slidesCount);
+    };
+
+    $slider.on("init", function(event, slick) {
+      $slider.append(sliderCounter);
+      updateSliderCounter(slick);
+    });
+
+    $slider.on("afterChange", function(event, slick, currentSlide) {
+      updateSliderCounter(slick, currentSlide);
+    });
+
+    // Initialize Slick Slider with options if needed
+    $slider.slick({
+      // Slick options can go here
+    });
+  }
+});
+
+
+    </script>
+
+    <script>
+
+      $(".reviewslist").slick({
+
+        centerMode: false,
+
+        centerPadding: "0px",
+
+        slidesToShow: 3,
+
+        dots: false,
+
+        arrows: true,
+
+        responsive: [
+
+          {
+
+            breakpoint: 768,
+
+            settings: {
+
+              centerPadding: "0px",
+
+              slidesToShow: 2,
+
+            },
+
+          },
+
+          {
+
+            breakpoint: 480,
+
+            settings: {
+
+              centerPadding: "0px",
+
+              slidesToShow: 1,
+
+            },
+
+          },
+
+        ],
+
+      });
+
+      var $slider = $(".reviewslist");
+
+
+
+      if ($slider.length) {
+
+        var currentSlide;
+
+        var slidesCount;
+
+        var sliderCounter = document.createElement("div");
+
+        sliderCounter.classList.add("slider__counter");
+
+
+
+        var updateSliderCounter = function (slick, currentIndex) {
+
+          currentSlide = slick.slickCurrentSlide() + 1;
+
+          slidesCount = slick.slideCount;
+
+          $(sliderCounter).text(currentSlide + "/" + slidesCount);
+
+        };
+
+
+
+        $slider.on("init", function (event, slick) {
+
+          $slider.append(sliderCounter);
+
+          updateSliderCounter(slick);
+
+        });
+
+
+
+        $slider.on("afterChange", function (event, slick, currentSlide) {
+
+          updateSliderCounter(slick, currentSlide);
+
+        });
+
+
+
+        $slider.slick();
+
+      }
+
+    </script>
+
+    <script>
+
+      filterSelection("all"); // Execute the function and show all columns
+
+      function filterSelection(c) {
+
+        var x, i;
+
+        x = document.getElementsByClassName("foodch");
+
+        if (c == "all") c = "";
+
+        // Add the "show" class (display:block) to the filtered elements, and remove the "show" class from the elements that are not selected
+
+        for (i = 0; i < x.length; i++) {
+
+          w3RemoveClass(x[i], "showblock");
+
+          if (x[i].className.indexOf(c) > -1) w3AddClass(x[i], "showblock");
+
+        }
+
+      }
+
+
+
+      // Show filtered elements
+
+      function w3AddClass(element, name) {
+
+        var i, arr1, arr2;
+
+        arr1 = element.className.split(" ");
+
+        arr2 = name.split(" ");
+
+        for (i = 0; i < arr2.length; i++) {
+
+          if (arr1.indexOf(arr2[i]) == -1) {
+
+            element.className += " " + arr2[i];
+
+          }
+
+        }
+
+      }
+
+
+
+      // Hide elements that are not selected
+
+      function w3RemoveClass(element, name) {
+
+        var i, arr1, arr2;
+
+        arr1 = element.className.split(" ");
+
+        arr2 = name.split(" ");
+
+        for (i = 0; i < arr2.length; i++) {
+
+          while (arr1.indexOf(arr2[i]) > -1) {
+
+            arr1.splice(arr1.indexOf(arr2[i]), 1);
+
+          }
+
+        }
+
+        element.className = arr1.join(" ");
+
+      }
+
+
+
+    </script>
+
+    <script>
+
+      jQuery(document).ready(function () {
+
+        jQuery(window).scroll(function () {
+
+          if (jQuery(this).scrollTop() > 1) {
+
+            jQuery("header").addClass("sticky");
+
+          } else {
+
+            jQuery("header").removeClass("sticky");
+
+          }
+
+        });
+
+        jQuery(".navbar-toggler").click(function () {
+
+          jQuery(".navbar-toggler i").toggleClass("fa-times");
+
+          // jQuery(".navbar-collapse").toggleClass("show");
+
+        });
+
+        // jQuery("#person").click(function () {
+
+        //   jQuery("#dropuser").toggle();
+
+        //   // jQuery("#ovly").toggleClass("d-block");
+
+        // });
+
+      });
+
+    </script>
+
+    {% if user.is_authenticated and user.is_restaurant_admin %}
+      <script>
+        (function() {
+            const restaurantSlug = "{{ user.restaurant.slug }}";
+            const socket = new ReconnectingWebSocket(`ws://${window.location.host}/ws/orders/${restaurantSlug}/`);
+            const notificationSound = document.getElementById("notification-sound");
+            const newOrdersContainer = document.getElementById("new-orders-container");
+            const newOrdersList = document.getElementById("new-orders-list");
+
+            socket.onopen = function(event) {
+                console.log("WebSocket connection established");
+            };
+
+            socket.onmessage = function(event) {
+                const data = JSON.parse(event.data);
+                console.log("Received WebSocket message:", data);
+
+                if (data.message && data.message.status === "new_order") {
+                    console.log("New order received:", data.message.order_id);
+                    notificationSound.play().catch(error => console.error("Error playing sound:", error));
+
+                    showNotification(data.message.order_id);
+                    updateOrderDetails(data.message.order_id);
+                }
+            };
+
+            socket.onerror = function(error) {
+                console.error("WebSocket error:", error);
+            };
+
+            socket.onclose = function(event) {
+                console.log("WebSocket connection closed:", event);
+            };
+
+            function showNotification(orderId) {
+                if ("Notification" in window && Notification.permission === "granted") {
+                    const notification = new Notification("New Order", {
+                        body: `New order #${orderId} has been received!`,
+                        icon: "{% static 'path/to/your/icon.png' %}"
+                    });
+
+                    notification.onclick = function() {
+                        window.open(`/restaurant/${restaurantSlug}/order/${orderId}/`, '_blank');
+                    };
+                }
+            }
+
+            function updateOrderDetails(orderId) {
+                fetch(`/restaurant/${restaurantSlug}/order-partial/${orderId}/`)
+                    .then(response => response.text())
+                    .then(orderHtml => {
+                        newOrdersList.insertAdjacentHTML("afterbegin", orderHtml);
+                        newOrdersContainer.style.display = 'block';
+                    })
+                    .catch(error => console.error("Error fetching order details:", error));
+            }
+
+            // Request notification permission
+            if ("Notification" in window && Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+        })();
+      </script>
+    {% endif %}
+  </body>
+</html>

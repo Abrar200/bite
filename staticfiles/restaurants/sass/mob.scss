@@ -1,0 +1,470 @@
+@import "variables";
+@import "mixin";
+.mobtsnav {
+  background: #f5f7fb;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  aspect-ratio: 1;
+  @include br(100px);
+  border: none;
+}
+.mobrticons {
+  background: #f5f7fb;
+  @include br(100px);
+  padding: 2px;
+  button {
+    width: 32px;
+    aspect-ratio: 1;
+    @include br(100px);
+    display: grid;
+    place-items: center;
+    border: none;
+    background: none;
+  }
+  .active {
+    background: $primary;
+  }
+}
+.mlocbtn {
+  border: 1px solid $primary;
+  @include br(6px);
+  padding: 6px;
+  background: $white;
+  p {
+    color: $black;
+    font-size: 12px;
+  }
+}
+.mobtitlehi {
+  h1 {
+    font-size: 24px;
+    color: $black;
+    line-height: 28px;
+    font-weight: 500;
+  }
+  p {
+    font-size: 12px;
+    color: #ababab;
+    line-height: 16px;
+  }
+}
+.moblheading {
+  h3 {
+    font-size: 16px;
+    color: #333;
+    font-weight: 600;
+    line-height: 20px;
+  }
+}
+.scroll-catv {
+  overflow-x: auto;
+  .catmobbox {
+    background: #f5f7f9;
+    padding: 4px;
+    @include br(100px);
+    text-align: center;
+    .cimg {
+      width: 58px;
+      aspect-ratio: 1;
+      @include br(100px);
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    h5 {
+      font-size: 12px;
+      color: #333;
+      padding: 6px 0 8px 0;
+    }
+    &:hover,
+    &:focus {
+      background: $primary;
+      h5 {
+        color: $white;
+      }
+    }
+  }
+}
+.foryouoff {
+  position: relative;
+  overflow: hidden;
+  @include br(20px);
+  .imgfyoff {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    @include br(20px);
+  }
+  .overlay {
+    position: absolute;
+    inset: 0;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 17%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    h3 {
+      color: $white;
+      font-size: 24px;
+      line-height: 20px;
+    }
+    h4 {
+      color: $white;
+      font-size: 14px;
+      line-height: 16px;
+    }
+    p {
+      color: #bababa;
+      font-size: 12px;
+    }
+  }
+}
+.mobratingsec {
+  h6 {
+    color: $white;
+    i {
+      color: #bababa;
+    }
+    .active {
+      color: orange;
+    }
+  }
+}
+.moborbtn {
+  display: inline-block;
+  padding: 10px 20px;
+  text-align: center;
+  text-transform: capitalize;
+  display: inline-block;
+  font-size: 14px;
+  @include br(100px);
+  border: 1px solid $primary;
+  background: $primary;
+  color: $white;
+  font-weight: 600;
+  &:hover {
+    background: darken($color: $primary, $amount: 5%);
+  }
+}
+.seemob {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 16px;
+  color: #a5a5a5;
+}
+.mobfootmenu {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: #ededed;
+  @include br(100px);
+  z-index: 33;
+  padding: 10px 20px;
+  a {
+    display: inline-block;
+
+    &:nth-child(3) {
+      margin-top: -30px;
+      background: $primary;
+      border: 3px solid#ededed;
+      @include br(100px);
+      width: 56px;
+      aspect-ratio: 1;
+      padding: 8px;
+      display: grid;
+      place-items: center;
+    }
+    img {
+      width: 100%;
+    }
+  }
+}
+.mprofilenav {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 90%;
+  display: none;
+  z-index: 99;
+  background: $white;
+}
+.mprofiletop {
+  background: $black url(../images/mobicons/profilecri.png) no-repeat top right;
+  @include br(0 0 15px 15px);
+  padding: 34px 15px 25px 15px;
+  .mprouser {
+    padding: 10px;
+    @include br(100px);
+    background: linear-gradient(
+      45deg,
+      rgba(70, 61, 59, 1) 0%,
+      rgba(0, 0, 0, 1) 100%
+    );
+
+    .redm {
+      border: 1px solid $primary;
+      padding: 2px;
+      @include br(100px);
+      position: relative;
+      span {
+        position: absolute;
+        top: 0;
+        right: 0;
+        @include br(100px);
+        background: $primary;
+        width: 10px;
+        aspect-ratio: 1;
+        border: 1px solid $white;
+      }
+      .mphotouser {
+        width: 48px;
+        aspect-ratio: 1;
+        overflow: hidden;
+        @include br(100px);
+      }
+    }
+  }
+  h3 {
+    font-size: 16px;
+    line-height: 16px;
+    font-weight: 500;
+    color: $white;
+  }
+  h6 {
+    font-size: 12px;
+    line-height: 16px;
+    color: #808080;
+  }
+}
+.prolinks {
+  height: 80vh;
+  overflow-y: auto;
+  a {
+    padding: 10px 30px;
+    background: $white;
+    .notificon {
+      background: #f2f2f2;
+      width: 30px;
+      aspect-ratio: 1;
+      @include br(100px);
+      display: grid;
+      place-items: center;
+      i {
+        color: #292d32;
+      }
+    }
+
+    h6 {
+      font-size: 14px;
+      color: $black;
+      font-weight: 400;
+    }
+    .notifnum {
+      background: $primary;
+      color: $white;
+      font-size: 12px;
+      aspect-ratio: 1;
+      width: 24px;
+      @include br(100px);
+      text-align: center;
+      line-height: 24px;
+    }
+    &:hover {
+      background: #f5f7fb;
+      .notificon {
+        background: #f2e6e7;
+        i {
+          color: $primary;
+        }
+      }
+    }
+  }
+}
+
+.mtophead {
+  padding: 10px 0;
+  h1 {
+    color: $black;
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .mbackbtn {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: $black;
+    padding: 5px;
+    z-index: 32;
+  }
+}
+.accbtn {
+  a {
+    @include sm {
+      font-size: 12px;
+    }
+  }
+}
+.musercphoto {
+  width: 120px;
+  aspect-ratio: 1;
+  padding: 10px;
+  background: #edeef2;
+  box-shadow: 0 0 10px rgba($black, 0.2) inset;
+  @include br(100px);
+  .minpic {
+    width: 100%;
+    @include br(100px);
+    overflow: hidden;
+    aspect-ratio: 1;
+  }
+  span {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+    background: $primary;
+    color: $white;
+    aspect-ratio: 1;
+    width: 30px;
+    display: grid;
+    place-items: center;
+    @include br(100px);
+    z-index: 12;
+  }
+}
+
+.mtopfoodslider {
+  .footopoption {
+    position: absolute;
+    inset: 0;
+    z-index: 22;
+    padding: 15px;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.99) 0%,
+      rgba(0, 0, 0, 0) 100%
+    );
+
+    .backmwhite {
+      color: $white;
+    }
+    .mfoooption {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: $white;
+    }
+    .mstart {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      h6 {
+        font-size: 12px;
+        color: $white;
+      }
+
+      i {
+        font-size: 12px;
+        color: orange;
+      }
+    }
+  }
+  .imgmobsize {
+    height: 252px;
+  }
+  .slick-dots {
+    bottom: 10px;
+    li {
+      button {
+        background: $white;
+        padding: 0px;
+        height: 6px;
+        width: 6px;
+        @include br(100px);
+        aspect-ratio: 1;
+        &::before {
+          display: none;
+        }
+      }
+    }
+    .slick-active {
+      button {
+        width: 20px;
+        transform: translateX(-10px);
+      }
+    }
+  }
+}
+
+.mfootitle {
+  h2 {
+    font-size: 24px;
+    font-weight: 500;
+    color: $black;
+  }
+  p {
+    color: #808080;
+    font-size: 13px;
+  }
+  h6 {
+    color: $black;
+    font-size: 24px;
+    font-weight: 500;
+  }
+}
+.aboutm{
+  .backmbtn{
+    color: $black;
+  }
+  h3{
+    color: $black;
+    font-size: 20px;
+    font-weight: 500;
+    text-align: center;
+  }
+  .mdot{
+    color: $black;
+    border: none;
+    background: $white;
+  }
+}
+.mabouttext{
+  h2{
+    color: $black;
+    font-weight: 500;
+    font-size: 20px;
+  }
+  h3{
+    font-size: 14px;
+    line-height: 20px;
+    color: #4d4d4d;
+  }
+  p{
+    color: #999999;
+    font-size: 12px;
+  }
+}
+@include sm {
+  .blacktitle h3 {
+    font-size: 16px;
+  }
+  .blacktitle h4 {
+    font-size: 14px;
+  }
+  .notireq {
+    h6 {
+      font-size: 12px;
+    }
+  }
+  .sizelabel .sizecontainer h5 {
+    font-size: 14px;
+  }
+}

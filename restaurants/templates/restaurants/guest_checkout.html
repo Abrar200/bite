@@ -1,0 +1,42 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="guest_checkout_main d-block" style="margin-bottom: 160px;">
+    <div class="container-fluid">
+        <div class="row h-100 align-items-center">
+            <div class="col-md-6 h-100 order-md-1 order-2 p-0">
+                <form method="POST" action="{% url 'guest_checkout' slug=restaurant.slug %}" class="h-100">
+                    {% csrf_token %}
+                    <div class="d-flex flex-column h-100 py-5 px-4 p-md-5 justify-content-center w-100 align-items-start gap-4">
+                        <div class="d-flex flex-column gap-2">
+                            <h1>Guest Checkout</h1>
+                            <p>Please provide your phone number to continue as a guest.</p>
+                        </div>
+                        <div class="d-flex flex-column gap-3 w-100">
+                            <div class="d-flex flex-column gap-2 w-100">
+                                <label for="phone">Phone Number</label>
+                                <div class="d-flex align-items-center gap-2 input_box">
+                                    <div class="d-block">
+                                        <img class="w-100 h-100" src="{% static 'restaurants/images/phone.png' %}" alt="phone icon" />
+                                    </div>
+                                    <input id="phone" name="phone" class="w-100" type="tel" placeholder="Enter your phone number" required/>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+                                <button type="submit">Continue as Guest</button>
+                                <a class="primary_btn" href="{% url 'login' restaurant_slug=restaurant.slug %}">Already have an account? Log in</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6 h-100 p-md-4 p-0 order-md-2 order-1">
+                <div class="d-block h-100 login_banner">
+                    <img class="w-100 h-100" src="{{ restaurant.landing_page_image.url }}" alt="guest checkout banner" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

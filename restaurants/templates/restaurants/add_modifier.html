@@ -1,0 +1,360 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+<style>
+  :root { 
+      --primary-color: {{ primary_color }};
+      --primary-dark: rgba(0, 0, 0, 0.2);
+      --primary-light: rgba(255, 255, 255, 0.2);
+  }
+  
+  .submit-btn:hover, .add-modifier-btn:hover {
+      background-color: color-mix(in srgb, var(--primary-color), var(--primary-dark));
+  }
+  
+  .back-link:hover {
+      color: color-mix(in srgb, var(--primary-color), var(--primary-dark));
+  }
+
+  .add-modifier-section {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #f6f6f6, #ffffff);
+      padding: 4rem 0;
+  }
+
+  .form-container {
+      background-color: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+  }
+
+  .form-title {
+      font-family: 'Playfair Display', serif;
+      color: var(--primary-color);
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+      text-align: center;
+  }
+
+  .input-group {
+      margin-bottom: 1.5rem;
+  }
+
+  .input-label {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 0.5rem;
+  }
+
+  .input-field {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      transition: all 0.3s ease;
+  }
+
+  .input-field:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 2px var(--primary-light);
+  }
+
+  .submit-btn, .add-modifier-btn {
+      background-color: var(--primary-color);
+      color: #ffffff;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      padding: 0.75rem 2rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  }
+
+  .submit-btn:hover, .add-modifier-btn:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+  }
+
+  .back-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      transition: all 0.3s ease;
+  }
+
+  .back-link:hover {
+      color: var(--primary-dark);
+  }
+
+  .modifier-item {
+      background-color: #f9f9f9;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+      position: relative;
+  }
+
+  .modifier-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .remove-modifier-btn {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-color: var(--primary-color);
+      border: none;
+      color: #fff;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 25px;
+      height: 25px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .price-varies-container {
+      display: flex;
+      align-items: center;
+      margin-top: 0.5rem;
+  }
+
+  .price-varies-container input[type="checkbox"] {
+      margin-right: 0.5rem;
+  }
+
+  .price-varies-container label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      color: #555;
+      margin-bottom: 0;
+  }
+
+  .modifier-price-wrapper {
+      display: flex;
+      flex-direction: column;
+  }
+
+  .modifier-price-wrapper .input-field {
+      margin-bottom: 0.5rem;
+  }
+
+  .image-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 20px;
+  }
+</style>
+
+<section class="add-modifier-section">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="form-container">
+          <h1 class="form-title">Add Modifier to {{ menu_item.name }}</h1>
+          <form method="POST" action="{% url 'add_modifier' restaurant.slug menu_item.id %}" id="modifier-form">
+            {% csrf_token %}
+            <div class="input-group">
+              <label class="input-label" for="group-name">Modifier Group Name</label>
+              <input id="group-name" name="group_name" class="input-field" type="text" placeholder="Enter Modifier Group Name" required />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="selection-type">Selection Type</label>
+              <select id="selection-type" name="selection_type" class="input-field" required>
+                <option value="SINGLE">Single Select</option>
+                <option value="MULTIPLE">Multiple Select</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="min-selections">Minimum Selections</label>
+              <input id="min-selections" name="min_selections" class="input-field" type="number" min="0" value="0" required />
+            </div>
+            <div class="input-group">
+              <label class="input-label" for="max-selections">Maximum Selections (Optional)</label>
+              <input id="max-selections" name="max_selections" class="input-field" type="number" min="1" />
+            </div>
+            <div id="modifiers-container">
+              <!-- Initial modifier item will be added here dynamically -->
+            </div>
+            <div class="text-center mt-4">
+              <button type="button" id="add-modifier" class="add-modifier-btn">Add Another Modifier</button>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a href="{% url 'restaurant_dashboard' restaurant.slug %}" class="back-link">Back to Dashboard</a>
+              <button type="submit" class="submit-btn">Save Modifier Group</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div class="col-lg-4 d-none d-lg-block">
+        <img src="{{ restaurant.landing_page_image.url }}" alt="Restaurant Image" class="image-preview">
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('modifiers-container');
+    const addButton = document.getElementById('add-modifier');
+    const selectionTypeField = document.getElementById('selection-type');
+    const minSelectionsField = document.getElementById('min-selections');
+    const maxSelectionsField = document.getElementById('max-selections');
+  
+    function updateSelectionFields() {
+      if (selectionTypeField.value === 'SINGLE') {
+        minSelectionsField.value = 1;
+        minSelectionsField.disabled = true;
+        maxSelectionsField.value = 1;
+        maxSelectionsField.disabled = true;
+      } else if (selectionTypeField.value === 'MULTIPLE') {
+        minSelectionsField.value = 0;
+        minSelectionsField.disabled = false;
+        maxSelectionsField.disabled = false;
+      }
+    }
+  
+    function initializePriceFields() {
+      document.querySelectorAll('.price-varies-container input[type="checkbox"]').forEach((checkbox, index) => {
+        const priceField = document.querySelector(`#modifier-price-${index + 1}`);
+        priceField.disabled = !checkbox.checked;
+      });
+    }
+  
+    updateSelectionFields();
+    initializePriceFields();
+    selectionTypeField.addEventListener('change', updateSelectionFields);
+  
+    let modifierCount = 0;
+  
+    function addModifier() {
+        modifierCount++;
+        const newModifier = document.createElement('div');
+        newModifier.className = 'modifier-item';
+        newModifier.innerHTML = `
+          <button type="button" class="remove-modifier-btn">&times;</button>
+          <div class="row">
+            <div class="col-md-6">
+              <label class="input-label" for="modifier-name-${modifierCount}">Modifier Name</label>
+              <input id="modifier-name-${modifierCount}" name="modifier_name[]" class="input-field" type="text" placeholder="Modifier Name" required />
+            </div>
+            <div class="col-md-6">
+              <div class="modifier-price-wrapper">
+                <label class="input-label" for="modifier-price-${modifierCount}">Price</label>
+                <input id="modifier-price-${modifierCount}" name="modifier_price[]" class="input-field" type="number" step="0.01" placeholder="Price" required disabled />
+                <div class="price-varies-container">
+                  <input id="price-varies-${modifierCount}" type="checkbox" name="price_varies[]" />
+                  <label for="price-varies-${modifierCount}">Price Varies</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(newModifier);
+      
+        const priceVariesCheckbox = newModifier.querySelector(`#price-varies-${modifierCount}`);
+        const priceField = newModifier.querySelector(`#modifier-price-${modifierCount}`);
+      
+        priceField.disabled = true;
+      
+        priceVariesCheckbox.addEventListener('change', function() {
+          priceField.disabled = !this.checked;
+          if (!this.checked) {
+            priceField.value = '';
+          }
+        });
+      
+        newModifier.querySelector('.remove-modifier-btn').addEventListener('click', function() {
+          container.removeChild(newModifier);
+        });
+      }
+      
+    addButton.addEventListener('click', addModifier);
+  
+    // Add initial modifier
+    addModifier();
+    
+    // Initialize price fields for the initially added modifier
+    initializePriceFields();
+  
+    // Handle form submission
+    document.getElementById('modifier-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+
+        // Clear existing modifier data
+        formData.delete('modifier_name[]');
+        formData.delete('modifier_price[]');
+        formData.delete('price_varies[]');
+
+        // Set min and max selections based on selection type
+        const selectionType = formData.get('selection_type');
+        if (selectionType === 'SINGLE') {
+            formData.set('min_selections', '1');
+            formData.set('max_selections', '1');
+        } else {
+            // For MULTIPLE, use the values from the form fields
+            formData.set('min_selections', document.getElementById('min-selections').value);
+            formData.set('max_selections', document.getElementById('max-selections').value || '');
+        }
+
+        // Ensure all modifiers have complete data
+        const modifierItems = document.querySelectorAll('.modifier-item');
+        modifierItems.forEach((item, index) => {
+            const nameField = item.querySelector('input[name="modifier_name[]"]');
+            const priceField = item.querySelector('input[name="modifier_price[]"]');
+            const priceVariesCheckbox = item.querySelector('input[name="price_varies[]"]');
+
+            if (nameField && priceField && priceVariesCheckbox) {
+                formData.append(`modifier_name[]`, nameField.value);
+                if (priceVariesCheckbox.checked) {
+                    formData.append(`modifier_price[]`, priceField.value || '');
+                    formData.append(`price_varies[]`, 'on');
+                } else {
+                    formData.append(`modifier_price[]`, priceField.value || '0');
+                    formData.append(`price_varies[]`, 'off');
+                }
+            }
+        });
+
+        // Disable the submit button to prevent multiple submissions
+        const submitButton = form.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+
+        fetch(form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = data.redirect_url;
+            } else {
+                alert('Error: ' + data.error);
+                submitButton.disabled = false;
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+            submitButton.disabled = false;
+        });
+    });
+});
+</script>
+{% endblock %}

@@ -1,0 +1,209 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="mobile_hedaerbur d-md-none d-block">
+    <div class="container-lg">
+        <div class="d-flex align-items-center ga-3 justify-content-between">
+            <a href="{% url 'restaurant_landing_page' restaurant.slug %}" class="d-block arrow_left">
+                <img class="w-100 h-100" src="{% static 'restaurants/images/arrow-leftw.png' %}" alt="Back">
+            </a>
+            <a href="#" class="d-block three_dot">
+                <img class="w-100 h-100" src="{% static 'restaurants/images/more.png' %}" alt="More">
+            </a>
+        </div>
+    </div>
+</div>
+<section class="d-block py-md-5 burger_main">
+    <div class="container-lg h-100">
+        <div class="row gx-md-5 justify-content-center align-items-center h-100">
+            <div class="col-md-7">
+                <div class="row">
+                    <div class="col-md-3 p-0 position-relative">
+                        <div class="d-flex flex-column vertical_slider gap-3">
+                            {% if menu_item.image1 %}
+                            <a class="d-block burger_main_img" href="javascript:void(0)" onclick="return setImage('{{ menu_item.image1.url }}')">
+                                <img class="w-100 h-100 object-fit-cover" src="{{ menu_item.image1.url }}" alt="{{ menu_item.name }}">
+                            </a>
+                            {% endif %}
+                            {% if menu_item.image2 %}
+                            <a class="d-block burger_main_img" href="javascript:void(0)" onclick="return setImage('{{ menu_item.image2.url }}')">
+                                <img class="w-100 h-100 object-fit-cover" src="{{ menu_item.image2.url }}" alt="{{ menu_item.name }}">
+                            </a>
+                            {% endif %}
+                            {% if menu_item.image3 %}
+                            <a class="d-block burger_main_img" href="javascript:void(0)" onclick="return setImage('{{ menu_item.image3.url }}')">
+                                <img class="w-100 h-100 object-fit-cover" src="{{ menu_item.image3.url }}" alt="{{ menu_item.name }}">
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="d-md-block d-none burger_main_img_center">
+                            <img id="mainImage" class="w-100 h-100 object-fit-cover appendid" src="{{ menu_item.image1.url }}" alt="{{ menu_item.name }}">
+                        </div>
+                    </div>
+                    <div class="col-md-3"></div>
+                    <div class="col-md-9">
+                        <div class="d-flex flex-column gap-2 py-md-5 py-3 burger_info">
+                            <div class="d-md-flex d-none justify-content-between align-items-center">
+                                <h3>{{ menu_item.name }}</h3>
+                                <h5 id="totalPrice">${{ menu_item.price }}</h5>
+                            </div>
+                            <div class="d-flex d-md-none flex-column justify-content-between align-items-md-center gap-2">
+                                <h3>{{ menu_item.name }}</h3>
+                                <p>{{ menu_item.description }}</p>
+                            </div>
+                            <div class="d-md-flex d-none justify-content-between align-items-center">
+                                <p>{{ menu_item.description }}</p>
+                                <div class="d-block">
+                                    <div class="qty-container">
+                                        <button class="qty-btn-minus btn-light" type="button"><i class="fa fa-minus"></i></button>
+                                        <input type="text" name="qty" id="qtyInput" value="1" class="input-qty" />
+                                        <button class="qty-btn-plus btn-light" type="button"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex d-md-none justify-content-between align-items-center">
+                                <h5>${{ menu_item.price }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="d-flex flex-column gap-4 select_final p-md-5 p-2">
+                    <h5>Modifiers</h5>
+                    <div class="d-flex flex-column gap-4">
+                        {% for modifier_group in menu_item.modifier_groups.all %}
+                            <div class="d-flex align-items-start gap-3">
+                                <div class="please_select_box">
+                                    <div class="d-flex flex-column gap-2">
+                                        <h6>{{ modifier_group.name }}</h6>
+                                        <ul class="d-flex flex-column gap-2">
+                                            {% for modifier in modifier_group.modifiers.all %}
+                                            <li>
+                                                {% if modifier_group.selection_type == 'SINGLE' %}
+                                                <input type="radio" name="modifier_group_{{ modifier_group.id }}" class="modifier-input"
+                                                    data-price="{{ modifier.price }}" value="{{ modifier.id }}" onchange="updatePrice()">
+                                                {% else %}
+                                                <input type="checkbox" name="modifier_group_{{ modifier_group.id }}" class="modifier-input"
+                                                    data-price="{{ modifier.price }}" value="{{ modifier.id }}"
+                                                    data-group-id="{{ modifier_group.id }}" onchange="updatePrice();">
+                                                {% endif %}
+                                                {{ modifier.name }} {% if modifier.price > 0 %}(+${{ modifier.price }}){% endif %}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="d-flex flex-column gap-3">
+                        <h6>Item notes</h6>
+                        <textarea cols="30" rows="5" placeholder="Write a message..."></textarea>
+                    </div>
+                    <div class="d-flex flex-column justify-content-start align-items-start gap-3">
+                        <button class="count_btn">Add to cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function setImage(imageUrl) {
+        document.getElementById('mainImage').src = imageUrl;
+        return false;
+    }
+
+    function updatePrice() {
+        const basePrice = parseFloat({{ menu_item.price }});
+        let totalPrice = basePrice;
+
+        const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+
+        const modifierInputs = document.querySelectorAll('.modifier-input:checked');
+        modifierInputs.forEach(input => {
+            totalPrice += parseFloat(input.getAttribute('data-price'));
+        });
+
+        totalPrice *= qty;
+
+        document.getElementById('totalPrice').innerText = `$${totalPrice.toFixed(2)}`;
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const qtyInput = document.getElementById('qtyInput');
+        const minusBtn = document.querySelector('.qty-btn-minus');
+        const plusBtn = document.querySelector('.qty-btn-plus');
+
+        minusBtn.addEventListener('click', function() {
+            let currentQty = parseInt(qtyInput.value);
+            if (currentQty > 1) {
+                qtyInput.value = currentQty - 1;
+                updatePrice();
+            }
+        });
+
+        plusBtn.addEventListener('click', function() {
+            let currentQty = parseInt(qtyInput.value);
+            qtyInput.value = currentQty + 1;
+            updatePrice();
+        });
+
+        qtyInput.addEventListener('change', updatePrice);
+
+        // Add event listeners to all modifier inputs
+        const modifierInputs = document.querySelectorAll('.modifier-input');
+        modifierInputs.forEach(input => {
+            input.addEventListener('change', updatePrice);
+        });
+
+        const addToCartButton = document.querySelector('.count_btn');
+        if (addToCartButton) {
+            addToCartButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                
+                const form = new FormData();
+                form.append('quantity', document.getElementById('qtyInput').value);
+                form.append('notes', document.querySelector('textarea[placeholder="Write a message..."]').value);
+    
+                // Add selected modifiers to the form data
+                const modifierGroups = document.querySelectorAll('.please_select_box');
+                modifierGroups.forEach(group => {
+                    const groupInputs = group.querySelectorAll('input[type="radio"]:checked, input[type="checkbox"]:checked');
+                    groupInputs.forEach(input => {
+                        form.append(input.name, input.value);
+                    });
+                });
+    
+                console.log("Form data before sending:", Object.fromEntries(form));
+
+                fetch("{% url 'add_to_cart' restaurant.slug menu_item.id %}", {
+                    method: "POST",
+                    body: form,
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Response from server:", data);
+                    if (data.success) {
+                        window.location.href = data.redirect_url;
+                    } else {
+                        alert(data.error);
+                    }
+                });
+            });
+        }
+
+        // Initial price update
+        updatePrice();
+    });
+</script>
+{% endblock %}
+

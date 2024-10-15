@@ -1,0 +1,81 @@
+{% extends "restaurants/base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Your Rewards at {{ restaurant.name }}</h2>
+    
+    <h3>Loyalty Points</h3>
+    <p>Your current points balance: {{ user_points.points }}</p>
+    
+    <h4>Available Rewards</h4>
+    <div class="row">
+        {% for item in menu_items %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">Points required: {{ item.points_price }}</p>
+                        {% if user_points.points >= item.points_price %}
+                            <button class="btn btn-primary redeem-points" data-item-id="{{ item.id }}">Redeem</button>
+                        {% else %}
+                            <button class="btn btn-secondary" disabled>Not enough points</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <h3 class="mt-5">Digital Loyalty Cards</h3>
+    <div class="row">
+        {% for user_card in digital_cards %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ user_card.digital_card.menu_item.name }}</h5>
+                        <p class="card-text">Progress: {{ user_card.current_count }} / {{ user_card.digital_card.buy_quantity }}</p>
+                        <p class="card-text">Unredeemed rewards: {{ user_card.unredeemed_rewards }}</p>
+                        {% if user_card.unredeemed_rewards > 0 %}
+                            <form method="post" action="{% url 'redeem_digital_card' restaurant.slug %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="digital_card_id" value="{{ user_card.digital_card.id }}">
+                                <button type="submit" class="btn btn-primary">Redeem Free Item</button>
+                            </form>
+                        {% else %}
+                            <button class="btn btn-secondary" disabled>No rewards available</button>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script>
+    document.querySelectorAll('.redeem-points').forEach(button => {
+        button.addEventListener('click', function() {
+            const itemId = this.getAttribute('data-item-id');
+            fetch(`{% url 'redeem_points' restaurant.slug %}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: `menu_item_id=${itemId}`
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    if (data.redirect_url) {
+                        window.location.href = data.redirect_url;  // Redirect to modifier selection
+                    } else {
+                        alert(data.message);
+                        location.reload();  // Reload to reflect updated points
+                    }
+                } else {
+                    alert(data.message);
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

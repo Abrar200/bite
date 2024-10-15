@@ -1,0 +1,46 @@
+{% extends "restaurants/base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Digital Loyalty Card Setup for {{ restaurant.name }}</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="menu_item">Menu Item</label>
+            <select name="menu_item" id="menu_item" class="form-control">
+                {% for item in menu_items %}
+                    <option value="{{ item.id }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="buy_quantity">Buy Quantity</label>
+            <input type="number" name="buy_quantity" id="buy_quantity" class="form-control" value="4" min="1">
+        </div>
+        <div class="form-group">
+            <label for="free_quantity">Free Quantity</label>
+            <input type="number" name="free_quantity" id="free_quantity" class="form-control" value="1" min="1">
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+
+    <h3 class="mt-5">Existing Digital Loyalty Cards</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Menu Item</th>
+                <th>Buy Quantity</th>
+                <th>Free Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for card in digital_cards %}
+            <tr>
+                <td>{{ card.menu_item.name }}</td>
+                <td>{{ card.buy_quantity }}</td>
+                <td>{{ card.free_quantity }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

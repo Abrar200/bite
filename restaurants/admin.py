@@ -1,0 +1,21 @@
+from django.contrib import admin
+from .models import Restaurant, RestaurantUser, Subscription, Menu, MenuItem, ModifierGroup, Modifier, CartItem, CartItemModifier, Order, OrderItem, OrderItemModifier, OrderNotification, LoyaltyProgram, DigitalLoyaltyCard, UserLoyaltyPoints, UserDigitalCard, WeeklySales
+
+admin.site.register(Restaurant)
+admin.site.register(RestaurantUser)
+admin.site.register(Subscription)
+admin.site.register(Menu)
+admin.site.register(MenuItem)
+admin.site.register(ModifierGroup)
+admin.site.register(Modifier)
+admin.site.register(CartItem)
+admin.site.register(CartItemModifier)
+admin.site.register(Order)
+admin.site.register(OrderItem)
+admin.site.register(OrderItemModifier)
+admin.site.register(OrderNotification)
+admin.site.register(LoyaltyProgram)
+admin.site.register(DigitalLoyaltyCard)
+admin.site.register(UserLoyaltyPoints)
+admin.site.register(UserDigitalCard)
+admin.site.register(WeeklySales)

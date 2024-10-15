@@ -1,0 +1,851 @@
+{% extends "restaurants/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<section class="herobanner d-block">
+
+    <div class="container-fluid">
+
+      <div class="row gy-4 align-items-center">
+
+        <div class="col-md-5 col-xxl-4 offset-lg-1 offset-xl-1 offset-xxl-2">
+
+          <div class="d-flex flex-column gap-4 herotext">
+
+            <h1>
+
+            <span>{{ restaurant.name }}</span>
+
+            </h1>
+
+            <p>
+
+              {{ restaurant.description }}
+
+            </p>
+
+          </div>
+
+          <div class="d-flex gap-3 mt-4 flex-wrap herolinks">
+
+            <a href="#" class="linkbtn">
+
+              <svg
+
+                width="24"
+
+                height="24"
+
+                viewBox="0 0 24 24"
+
+                fill="none"
+
+                xmlns="http://www.w3.org/2000/svg"
+
+              >
+
+                <path
+
+                  fill-rule="evenodd"
+
+                  clip-rule="evenodd"
+
+                  d="M11.6482 4.00956C11.1953 4.09872 10.7353 4.3543 10.4342 4.68403C10.0469 5.10809 9.89152 5.51193 9.86155 6.17167L9.84072 6.63088L9.56248 6.70265C8.06948 7.08782 6.34028 8.15613 5.26336 9.35864C4.23376 10.5084 3.49212 11.876 3.128 13.2962C2.99711 13.8069 2.85684 14.6451 2.85684 14.9169V15.1055H2.65991C2.3859 15.1055 2.1765 15.2218 2.07062 15.4328C1.99634 15.5807 1.98935 15.6417 2.01017 15.9585C2.06906 16.8549 2.45802 17.7214 3.08995 18.3637C3.54768 18.829 4.15163 19.1795 4.81047 19.3624L5.14259 19.4545H11.9608H18.7789L19.0967 19.3683C20.5817 18.9651 21.6283 17.8667 21.9284 16.3963C22.0253 15.9217 22.0239 15.6217 21.9238 15.4222C21.8234 15.2223 21.608 15.1055 21.3398 15.1055H21.1428V14.9101C21.1428 14.6263 20.9699 13.6436 20.8344 13.1575C20.1872 10.835 18.6645 8.84971 16.5835 7.61526C15.9017 7.21083 14.8346 6.76699 14.3006 6.66575L14.1593 6.63898L14.1391 6.17572C14.1085 5.47662 13.9152 5.0165 13.4737 4.59256C13.0744 4.20909 12.6493 4.02755 12.0975 4.00483C11.9041 3.99685 11.7019 3.99899 11.6482 4.00956ZM12.3321 5.24205C12.7067 5.37181 12.9767 5.77557 12.9767 6.20606V6.38765H11.9998H11.023V6.20606C11.023 5.49271 11.6733 5.01388 12.3321 5.24205ZM13.2502 7.65844C15.5496 8.0423 17.5827 9.41937 18.808 11.423C19.1936 12.0534 19.5762 12.9621 19.7566 13.6757C19.8453 14.0268 19.9701 14.7741 19.9704 14.9566L19.9707 15.1055H11.9998H4.02902V14.9515C4.02902 14.7298 4.16237 13.9831 4.28104 13.5404C4.80078 11.6011 6.08615 9.85804 7.79093 8.7808C8.48603 8.34153 9.35899 7.97538 10.183 7.77739C10.524 7.69545 10.714 7.66447 11.3747 7.58305C11.6531 7.54874 12.891 7.5985 13.2502 7.65844ZM20.7329 16.3864C20.7194 16.4356 20.638 16.6238 20.5519 16.8047C20.2588 17.4209 19.6809 17.9235 19.0077 18.1478L18.6617 18.263H11.9608C5.56543 18.263 5.2491 18.2597 5.02537 18.19C4.35101 17.9798 3.73898 17.4606 3.44953 16.8531C3.36103 16.6674 3.27749 16.4663 3.26386 16.4063L3.23909 16.297H11.9982H20.7574L20.7329 16.3864Z"
+
+                  fill="#ABABAB"
+
+                />
+
+              </svg>
+
+
+
+              <span>Order Now</span>
+
+            </a>
+
+            <a href="#" class="linkbtn">
+
+              <svg
+
+                width="24"
+
+                height="24"
+
+                viewBox="0 0 24 24"
+
+                fill="none"
+
+                xmlns="http://www.w3.org/2000/svg"
+
+              >
+
+                <path
+
+                  fill-rule="evenodd"
+
+                  clip-rule="evenodd"
+
+                  d="M5.21447 2.05109C3.65871 2.34236 2.43327 3.54827 2.0727 5.14284C2.0041 5.44627 2 5.7207 2 10.026C2 14.3313 2.0041 14.6057 2.0727 14.9091C2.385 16.2902 3.37373 17.4158 4.66386 17.8591C5.21552 18.0487 5.44813 18.0641 7.7606 18.0643L9.93455 18.0645L10.6576 19.5413C11.3312 20.917 11.3924 21.0264 11.5502 21.1387C11.6981 21.2439 11.7538 21.2593 11.9866 21.2593C12.2194 21.2593 12.2751 21.2439 12.4229 21.1387C12.5808 21.0264 12.6421 20.9167 13.3151 19.5431L14.0378 18.0681L16.3638 18.0539C18.5879 18.0402 18.7036 18.0359 19.0026 17.9541C20.5521 17.5306 21.6631 16.2995 21.9332 14.7068C22.0223 14.1819 22.0223 5.87008 21.9332 5.34515C21.6625 3.74919 20.5644 2.53197 19.0026 2.09675L18.6899 2.00962L12.1038 2.00194C6.57526 1.99551 5.46908 2.00339 5.21447 2.05109ZM18.6471 3.67487C19.0916 3.79179 19.3886 3.96879 19.73 4.32017C20.0725 4.67289 20.2783 5.05341 20.3705 5.50455C20.4561 5.9243 20.4561 14.1277 20.3705 14.5474C20.2018 15.3735 19.5661 16.0842 18.7485 16.3608C18.5526 16.4271 18.3016 16.4354 15.9083 16.455L13.283 16.4766L13.1136 16.5975C12.9606 16.7067 12.8989 16.8105 12.4752 17.6723C12.2172 18.1969 11.9973 18.6262 11.9866 18.6262C11.9758 18.6262 11.756 18.1969 11.498 17.6723C11.0743 16.8105 11.0126 16.7067 10.8595 16.5975L10.6901 16.4766L8.06485 16.455C5.67158 16.4354 5.42061 16.4271 5.22463 16.3608C4.84197 16.2313 4.55 16.0441 4.24579 15.7331C3.90699 15.3867 3.73481 15.0809 3.62111 14.624C3.54661 14.3243 3.54391 14.1642 3.54391 10.026C3.54391 5.88777 3.54661 5.72765 3.62111 5.42803C3.73407 4.97403 3.90757 4.66569 4.24614 4.31756C4.57994 3.97437 4.88286 3.79203 5.3107 3.67676C5.58579 3.60265 5.823 3.59984 11.9706 3.59771C18.1945 3.59554 18.3523 3.59739 18.6471 3.67487ZM5.4674 5.24617C5.28733 5.30283 5.04186 5.56813 4.99148 5.7606C4.96263 5.87065 4.95286 7.22696 4.96009 10.1134L4.97057 14.3063L5.06332 14.4597C5.11433 14.5441 5.22741 14.6617 5.31453 14.7209C5.44652 14.8108 5.51637 14.8288 5.73275 14.8288C5.94914 14.8288 6.01898 14.8108 6.15098 14.7209C6.2381 14.6617 6.35118 14.5441 6.40219 14.4597C6.49428 14.3074 6.49502 14.2964 6.50667 12.97L6.51839 11.6336H7.29621H8.07403L8.08576 12.973L8.09748 14.3123L8.20235 14.4752C8.3644 14.7268 8.55468 14.8288 8.86252 14.8288C9.07582 14.8288 9.14637 14.8104 9.27789 14.7209C9.36502 14.6617 9.47809 14.5441 9.5291 14.4597L9.62185 14.3063V12.4374V10.5686L9.5291 10.4152C9.47809 10.3308 9.36506 10.2132 9.27797 10.1539L9.11959 10.0461L7.81837 10.034L6.5171 10.022L6.506 7.88383L6.49494 5.74569L6.40219 5.59229C6.21786 5.2874 5.81288 5.13745 5.4674 5.24617ZM17.9751 5.24617C17.7994 5.30143 17.5508 5.56705 17.5005 5.75313C17.4739 5.85184 17.459 6.63949 17.4589 7.96421L17.4587 10.022L16.1561 10.034L14.8536 10.0461L14.6952 10.1539C14.6081 10.2132 14.4951 10.3308 14.4441 10.4152L14.3513 10.5686V12.4404V14.3122L14.4562 14.4751C14.6182 14.7268 14.8085 14.8288 15.1164 14.8288C15.3296 14.8288 15.4002 14.8104 15.5317 14.7209C15.6188 14.6617 15.7319 14.5441 15.7829 14.4597C15.875 14.3074 15.8758 14.2964 15.8874 12.97L15.8991 11.6336H16.677H17.4548L17.4665 12.97C17.4781 14.2964 17.4789 14.3074 17.571 14.4597C17.622 14.5441 17.7351 14.6617 17.8222 14.7209C17.9542 14.8108 18.024 14.8288 18.2404 14.8288C18.4568 14.8288 18.5266 14.8108 18.6586 14.7209C18.7458 14.6617 18.8588 14.5441 18.9098 14.4597L19.0026 14.3063V10.026V5.74569L18.9098 5.59229C18.7255 5.2874 18.3205 5.13745 17.9751 5.24617ZM8.59431 6.85568C8.40935 6.91114 8.16913 7.17443 8.11507 7.38093C8.0215 7.73822 8.16053 8.11376 8.45641 8.3029C8.60451 8.39755 8.61522 8.39835 9.90425 8.41033L11.2029 8.42239L11.2136 11.3643L11.2244 14.3063L11.3171 14.4597C11.3682 14.5441 11.4812 14.6617 11.5684 14.7209C11.7004 14.8108 11.7702 14.8288 11.9866 14.8288C12.203 14.8288 12.2728 14.8108 12.4048 14.7209C12.4919 14.6617 12.605 14.5441 12.656 14.4597L12.7488 14.3063L12.7595 11.3643L12.7703 8.42239L14.0718 8.41033L15.3734 8.39827L15.5318 8.29044C15.7757 8.12437 15.8757 7.92792 15.8757 7.61456C15.8757 7.30115 15.7757 7.1047 15.5317 6.93867L15.3733 6.83084L12.0481 6.82397C10.0189 6.81979 8.67276 6.83213 8.59431 6.85568Z"
+
+                  fill="#ABABAB"
+
+                  stroke="#ABABAB"
+
+                  stroke-width="0.2"
+
+                />
+
+              </svg>
+
+
+
+              <span>Book your table</span>
+
+            </a>
+
+            <a href="#" class="linkbtn">
+
+              <svg
+
+                width="24"
+
+                height="24"
+
+                viewBox="0 0 24 24"
+
+                fill="none"
+
+                xmlns="http://www.w3.org/2000/svg"
+
+              >
+
+                <path
+
+                  d="M3.16992 7.43945L11.9999 12.5494L20.7699 7.46942"
+
+                  stroke="#ABABAB"
+
+                  stroke-width="1.5"
+
+                  stroke-linecap="round"
+
+                  stroke-linejoin="round"
+
+                />
+
+                <path
+
+                  d="M12 21.6091V12.5391"
+
+                  stroke="#ABABAB"
+
+                  stroke-width="1.5"
+
+                  stroke-linecap="round"
+
+                  stroke-linejoin="round"
+
+                />
+
+                <path
+
+                  d="M9.9306 2.48L4.59061 5.45003C3.38061 6.12003 2.39062 7.80001 2.39062 9.18001V14.83C2.39062 16.21 3.38061 17.89 4.59061 18.56L9.9306 21.53C11.0706 22.16 12.9406 22.16 14.0806 21.53L19.4206 18.56C20.6306 17.89 21.6206 16.21 21.6206 14.83V9.18001C21.6206 7.80001 20.6306 6.12003 19.4206 5.45003L14.0806 2.48C12.9306 1.84 11.0706 1.84 9.9306 2.48Z"
+
+                  stroke="#ABABAB"
+
+                  stroke-width="1.5"
+
+                  stroke-linecap="round"
+
+                  stroke-linejoin="round"
+
+                />
+
+                <path
+
+                  d="M16.9998 13.2396V9.57965L7.50977 4.09961"
+
+                  stroke="#ABABAB"
+
+                  stroke-width="1.5"
+
+                  stroke-linecap="round"
+
+                  stroke-linejoin="round"
+
+                />
+
+              </svg>
+
+
+
+              <span>Delivery</span>
+
+            </a>
+
+          </div>
+
+          <div class="d-flex flex-column gap-4 herocard mt-5">
+
+            <div class="loyaltytext">
+
+              <h4>View your loyalty cards</h4>
+
+              <div class="lineblock"></div>
+
+            </div>
+
+            <div>
+
+              <div class="cardblock fulw">
+
+                <img src="{% static 'restaurants/images/curcard.svg' %}" alt="card" />
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="col-md-6 col-xxl-6">
+
+          <div class="heroimg fulw">
+            
+            <img src="{{ restaurant.landing_page_image.url }}" alt="image" />
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="cateblock d-block gapy">
+    <div class="container-lg">
+      <div class="row gy-5">
+        <div class="col-12">
+          <div class="d-flex flex-column gap-2 titlecontent">
+            <h2>Categories</h2>
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="catlist d-block" id="btncat">
+            {% for menu in menus %}
+              <div class="">
+                <button
+                  type="button"
+                  class="d-flex gap-3 align-items-center foobtn {% if forloop.first %}active{% endif %}"
+                  onclick="filterSelection('{{ menu.name|slugify }}')"
+                >
+                  <div class="flex-shrink-0">
+                    <div class="imgfood ofit" style="width: 60px; height: 60px; overflow: hidden; border-radius: 50%;">
+                      <img src="{{ menu.image.url }}" alt="{{ menu.name }}" style="width: 100%; height: 100%; object-fit: cover;" />
+                    </div>
+                  </div>
+                  <div class="flex-grow-1">
+                    <h4>{{ menu.name }}</h4>
+                  </div>
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      <div class="row gy-5 gx-md-5">
+        {% for item in menu_items %}
+        <div class="col-md-3 foodch {{ item.menu.name|slugify }}">
+            <div class="catprod d-flex flex-column h-100">
+                <a href="{% url 'menu_item_detail' restaurant.slug item.id %}" class="catprod-link">
+                    <div class="imgplus rel ofit">
+                        <img src="{{ item.image1.url }}" alt="{{ item.name }}" />
+                        <div class="overlay"></div>
+                    </div>
+                </a>
+                <div class="catprotext text-center d-flex flex-column flex-grow-1">
+                    <a href="{% url 'menu_item_detail' restaurant.slug item.id %}"><h4>{{ item.name }}</h4></a>
+                    <p>{{ item.description|truncatewords:20 }}</p>
+                    <h5>${{ item.price }}</h5>
+                    <div class="mt-auto oderbtn">
+                        <a href="{% url 'menu_item_detail' restaurant.slug item.id %}">View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+      </div>    
+    </div>
+  </section>
+
+
+  <script>
+    function filterSelection(category) {
+      var x, i;
+      x = document.getElementsByClassName("foodch");
+      if (category == "all") category = "";
+      for (i = 0; i < x.length; i++) {
+        w3RemoveClass(x[i], "show");
+        if (x[i].className.indexOf(category) > -1) w3AddClass(x[i], "show");
+      }
+      
+      // Update active button
+      var btns = document.getElementsByClassName("foobtn");
+      for (i = 0; i < btns.length; i++) {
+        btns[i].className = btns[i].className.replace(" active", "");
+      }
+      event.currentTarget.className += " active";
+    }
+  
+    function w3AddClass(element, name) {
+      var i, arr1, arr2;
+      arr1 = element.className.split(" ");
+      arr2 = name.split(" ");
+      for (i = 0; i < arr2.length; i++) {
+        if (arr1.indexOf(arr2[i]) == -1) {
+          element.className += " " + arr2[i];
+        }
+      }
+    }
+  
+    function w3RemoveClass(element, name) {
+      var i, arr1, arr2;
+      arr1 = element.className.split(" ");
+      arr2 = name.split(" ");
+      for (i = 0; i < arr2.length; i++) {
+        while (arr1.indexOf(arr2[i]) > -1) {
+          arr1.splice(arr1.indexOf(arr2[i]), 1);
+        }
+      }
+      element.className = arr1.join(" ");
+    }
+  
+    // Show all items on page load
+    window.onload = function() {
+      filterSelection('all');
+    };
+  </script>
+
+  <section class="aboutshakes d-block gapy">
+
+    <div class="container-lg">
+
+      <div class="row g-md-5">
+
+        <div class="col-12">
+
+          <div class="d-flex flex-column gap-2 bordertitle">
+
+            <h2>About Us,</h2>
+
+            <h3>{{ restaurant.name }}</h3>
+
+          </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+          <div class="d-flex flex-column gap-3 menfood">
+
+            <div class="menfimg rel ofit">
+
+              <img src="{{ restaurant.about_us_image1.url }}" alt="image" />
+
+            </div>
+
+            <p>
+
+                {{ restaurant.about_us_text1 }}
+
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+          <div class="d-flex flex-column gap-3 menfood">
+
+            <div class="menfimg rel ofit">
+
+              <img src="{{ restaurant.about_us_image2.url }}" alt="image" />
+
+            </div>
+
+            <p>
+
+                {{ restaurant.about_us_text2 }}
+
+            </p>
+
+          </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+          <div class="d-flex flex-column gap-3 menfood">
+
+            <div class="menfimg rel ofit">
+
+              <img src="{{ restaurant.about_us_image3.url }}" alt="image" />
+
+              <h3>Lorem Ipsum</h3>
+
+            </div>
+
+            <p>
+
+                {{ restaurant.about_us_text3 }}
+
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="mreviews d-block gapy">
+
+    <div class="container-lg">
+
+      <div class="row g-md-5 align-items-center">
+
+        <div class="col-12">
+
+          <div class="d-flex flex-column titlecontent">
+
+            <h2>Member Reviews</h2>
+
+          </div>
+
+        </div>
+
+        <div class="col-12">
+
+          <div class="reviewslist d-block">
+
+            <div class="px-4">
+
+              <div class="d-block rel reviewsmem">
+
+                <div class="revimg ofit px-3">
+
+                  <img src="{% static 'restaurants/images/review1.jpg' %}" alt="image" />
+
+                </div>
+
+                <div class="overwhite">
+
+                  <div class="d-flex align-items-center nameblock py-2 px-4">
+
+                    <div class="flex-grow-1">
+
+                      <div class="d-flex flex-column gap-1">
+
+                        <h4>Daniela Milton</h4>
+
+                        <h5>24 years old</h5>
+
+                      </div>
+
+                    </div>
+
+                    <div class="flex-shrink-0">
+
+                      <div class="p-icons gap-3 align-items-center">
+
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  <div class="desblock">
+
+                    <p>
+
+                      Incididunt sint reprehenderit irure in sit deserunt
+
+                      minim nisi ad deserunt. Quis magna elit minim
+
+                      adipisicing. Non est reprehenderit id dolore. Aliqua ex
+
+                      ullamco est minim in qui qui. Nisi occaecat do do aliqua
+
+                      nostrud amet qui consectetur mollit elit nisi amet
+
+                      tempor qui. Ipsum fugiat do veniam ut. Aliqua deserunt
+
+                      incididunt labore eu nulla.
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="px-4">
+
+              <div class="d-block rel reviewsmem">
+
+                <div class="revimg ofit px-3">
+
+                  <img src="{% static 'restaurants/images/review2.jpg' %}" alt="image" />
+
+                </div>
+
+                <div class="overwhite">
+
+                  <div class="d-flex align-items-center nameblock py-2 px-4">
+
+                    <div class="flex-grow-1">
+
+                      <div class="d-flex flex-column gap-1">
+
+                        <h4>Daniela Milton</h4>
+
+                        <h5>24 years old</h5>
+
+                      </div>
+
+                    </div>
+
+                    <div class="flex-shrink-0">
+
+                      <div class="p-icons gap-3 align-items-center">
+
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  <div class="desblock">
+
+                    <p>
+
+                      Incididunt sint reprehenderit irure in sit deserunt
+
+                      minim nisi ad deserunt. Quis magna elit minim
+
+                      adipisicing. Non est reprehenderit id dolore. Aliqua ex
+
+                      ullamco est minim in qui qui. Nisi occaecat do do aliqua
+
+                      nostrud amet qui consectetur mollit elit nisi amet
+
+                      tempor qui. Ipsum fugiat do veniam ut. Aliqua deserunt
+
+                      incididunt labore eu nulla.
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="px-4">
+
+              <div class="d-block rel reviewsmem">
+
+                <div class="revimg ofit px-3">
+
+                  <img src="{% static 'restaurants/images/review3.jpg' %}" alt="image" />
+
+                </div>
+
+                <div class="overwhite">
+
+                  <div class="d-flex align-items-center nameblock py-2 px-4">
+
+                    <div class="flex-grow-1">
+
+                      <div class="d-flex flex-column gap-1">
+
+                        <h4>Daniela Milton</h4>
+
+                        <h5>24 years old</h5>
+
+                      </div>
+
+                    </div>
+
+                    <div class="flex-shrink-0">
+
+                      <div class="p-icons gap-3 align-items-center">
+
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  <div class="desblock">
+
+                    <p>
+
+                      Incididunt sint reprehenderit irure in sit deserunt
+
+                      minim nisi ad deserunt. Quis magna elit minim
+
+                      adipisicing. Non est reprehenderit id dolore. Aliqua ex
+
+                      ullamco est minim in qui qui. Nisi occaecat do do aliqua
+
+                      nostrud amet qui consectetur mollit elit nisi amet
+
+                      tempor qui. Ipsum fugiat do veniam ut. Aliqua deserunt
+
+                      incididunt labore eu nulla.
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="px-4">
+
+              <div class="d-block rel reviewsmem">
+
+                <div class="revimg ofit px-3">
+
+                  <img src="{% static 'restaurants/images/review3.jpg' %}" alt="image" />
+
+                </div>
+
+                <div class="overwhite">
+
+                  <div class="d-flex align-items-center nameblock py-2 px-4">
+
+                    <div class="flex-grow-1">
+
+                      <div class="d-flex flex-column gap-1">
+
+                        <h4>Daniela Milton</h4>
+
+                        <h5>24 years old</h5>
+
+                      </div>
+
+                    </div>
+
+                    <div class="flex-shrink-0">
+
+                      <div class="p-icons gap-3 align-items-center">
+
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+
+                        <a href="#"><i class="fa-brands fa-x-twitter"></i></a>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  <div class="desblock">
+
+                    <p>
+
+                      Incididunt sint reprehenderit irure in sit deserunt
+
+                      minim nisi ad deserunt. Quis magna elit minim
+
+                      adipisicing. Non est reprehenderit id dolore. Aliqua ex
+
+                      ullamco est minim in qui qui. Nisi occaecat do do aliqua
+
+                      nostrud amet qui consectetur mollit elit nisi amet
+
+                      tempor qui. Ipsum fugiat do veniam ut. Aliqua deserunt
+
+                      incididunt labore eu nulla.
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="contactblock d-block">
+
+    <div class="container-lg">
+
+      <div class="roundblock d-block">
+
+        <div class="row g-5 align-items-end">
+
+          <div class="col-md-5">
+
+            <div class="imgcon fulw">
+
+              <img src="{{ restaurant.contact_us_image.url }}" alt="image" />
+
+            </div>
+
+          </div>
+
+          <div class="col-md-7">
+
+            <div class="d-flex flex-column gap-5 titlecontent">
+
+              <h2>Contact Us</h2>
+
+              <p>
+
+                Get in touch with us!
+
+              </p>
+
+              <div class="d-block mb-5">
+
+                <form action="">
+
+                  <div class="conform d-block">
+
+                    <div class="d-flex flex-column gap-4">
+
+                      <div>
+
+                        <input type="text" placeholder="Name" />
+
+                      </div>
+
+                      <div>
+
+                        <input type="text" placeholder="Email" />
+
+                      </div>
+
+                      <div>
+
+                        <textarea name="" rows="4" id="" placeholder="Details"></textarea>
+
+                      </div>
+
+                      <div>
+
+                        <button type="submit">Send</button>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </form>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <section class="locations-block d-block gapy">
+
+    <div class="container-lg">
+
+      <div class="row gy-5">
+
+        <div class="col-12">
+
+          <div class="d-flex flex-column gap-4 titlecontent">
+
+            <h2>Location</h2>
+
+            <h3>Order from our location</h3>
+
+          </div>
+
+        </div>
+
+        <div class="col-12">
+            <div class="map-container">
+                <iframe src="{{ restaurant.map_iframe_src }}" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+        
+
+      </div>
+
+    </div>
+
+  </section>
+
+{% endblock %}
